@@ -16,11 +16,55 @@ $display = (($Nugget->title == "") ? $Nugget->category : $Nugget->title);
 $display = ucwords($Nugget->type) . ":  " . $display;
 $grouped_words = $Nugget->split(3,5);
 
+$color_schemes = array(
+	0 => array(
+		'233d4d',
+		'fe7f2d',
+		'fcca46',
+		'a1c181',
+		'619b8a',
+	),
+	1 => array(
+		'264653',
+		'2A9D8F',
+		'E9C46A',
+		'F4A261',
+		'F4A261',
+	),
+	2 => array(
+		'd64045',
+		'e9fff9',
+		'9ed8db',
+		'467599',
+		'1d3354',
+	),
+	3 => array(
+		'd7263d',
+		'f46036',
+		'2e294e',
+		'1b998b',
+		'c5d86d',
+	),
+	4 => array(
+		'70d6ff',
+		'ff70a6',
+		'ff9770',
+		'ffd670',
+		'e9ff70',
+	),
+);
+
+$key = array_rand($color_schemes);
+$color_scheme = $color_schemes[$key];
+
 ?>
 <!DOCTYPE HTML>
 <html>
 <head>
 <style>
+p, span, label {
+  font-size: 20px;
+}
 .box {
   width: 800px;
   height: 150px;
@@ -30,35 +74,29 @@ $grouped_words = $Nugget->split(3,5);
 .group {
   padding: 3px;
   margin: 1px;
-  line-height: 30px;
+  line-height: 28px;
   word-wrap: normal;
   display: inline-block;  
 }
 /* https://coolors.co/palettes/trending */
-.color0 {
-  border: 3px solid #264653;
+<?php
+foreach ($color_scheme as $key => $value) {
+print '.color' . $key . ' {
+  border: 6px solid #' . $value . ';
+}';
 }
-.color1 {
-  border: 3px solid #2A9D8F;
-}
-.color2 {
-  border: 3px solid #E9C46A;
-}
-.color3 {
-  border: 3px solid #F4A261;
-}
-.color4 {
-  border: 3px solid #F4A261;
-}
+?>
 
 </style>
 <script>
 
 function move(ev, where) {
-	ev.preventDefault();
-	document.getElementById(where).appendChild(ev.target);
-	if (where == "destination" && document.getElementById("source").children.length == 0) {
-		checkAnswer();
+	if (ev.target.id != "destination" && ev.target.id != "source") {
+		ev.preventDefault();
+		document.getElementById(where).appendChild(ev.target);
+		if (where == "destination" && document.getElementById("source").children.length == 0) {
+			checkAnswer();
+		}
 	}
 }
 
@@ -74,11 +112,16 @@ function drop(ev) {
 	ev.preventDefault();
 	var data = ev.dataTransfer.getData("text");
 	ev.target.appendChild(document.getElementById(data));
+	if (ev.target.id == "destination" && document.getElementById("source").children.length == 0) {
+		checkAnswer();
+	}
 }
 
 function showAnswer(as_correct) {
 	if (as_correct) {
 		document.getElementById('solution').style.border = "2px solid green";
+		document.getElementById('destination').innerHTML = "";
+		document.getElementById('destination').appendChild(document.getElementById('solution'));
 	}
 	document.getElementById('solution').style.display = 'block';
 }
@@ -119,11 +162,9 @@ function updateLocation() {
 </script>
 </head>
 <body>
-
-<h1><?php print $display; ?></h1>
-
 <p>Click or drag the grouped words in the correct order.</p>
-
+<hr />
+<h1><?php print $display; ?></h1>
 <div class="box" id="source" onclick="move(event,'destination')" ondrop="drop(event)" ondragover="allowDrop(event)">
 <?php
 $group_spans = array();
@@ -147,13 +188,15 @@ foreach ($group_spans as $key => $span) {
 <br /><br />
 <button style="padding: 15px;" onclick="location.reload();">Play Again!</button>
 
-Filter for: <select name="type_category" id="type_category" onchange="updateLocation();">
+<label>Filter for: </label><select name="type_category" id="type_category" onchange="updateLocation();">
 <?php $Wisdom->printTypeCategoryOptions($type_category); ?>
 </select>
 
+
+<br/><br/><br/><br/><br/><br/>
 <p>Credit for these Maxims goes to <a href="https://seanking.substack.com/p/the-maxims">Sean King's blog</a></p>
 <p>Credit Logical Fallacies goes to <a href="https://yourlogicalfallacyis.com/">yourlogicalfallacyis.com/</a></p>
-<?php $Wisdom->printStats(); ?>
+<p><?php $Wisdom->printStats(); ?></p>
 
 </body>
 </html>

@@ -53,18 +53,27 @@ $grouped_words = $Nugget->split(3,5);
 
 </style>
 <script>
+
+function move(ev, where) {
+	ev.preventDefault();
+	document.getElementById(where).appendChild(ev.target);
+	if (where == "destination" && document.getElementById("source").children.length == 0) {
+		checkAnswer();
+	}
+}
+
 function allowDrop(ev) {
-  ev.preventDefault();
+	ev.preventDefault();
 }
 
 function drag(ev) {
-  ev.dataTransfer.setData("text", ev.target.id);
+	ev.dataTransfer.setData("text", ev.target.id);
 }
 
 function drop(ev) {
-  ev.preventDefault();
-  var data = ev.dataTransfer.getData("text");
-  ev.target.appendChild(document.getElementById(data));
+	ev.preventDefault();
+	var data = ev.dataTransfer.getData("text");
+	ev.target.appendChild(document.getElementById(data));
 }
 
 function showAnswer(as_correct) {
@@ -90,7 +99,7 @@ function checkAnswer() {
 	  	answerIsCorrect = false;
 	  }
 	}
-	var check_solution_result = "... Please Try Again ...";
+	var check_solution_result = "::: Incorrect: Please Try Again :::";
 	var result_color = "red";
 	if (answerIsCorrect) {
 		check_solution_result = "Correct!";
@@ -113,9 +122,9 @@ function updateLocation() {
 
 <h1><?php print $display; ?></h1>
 
-<p>Drag the grouped words into the rectangle below in the correct order.</p>
+<p>Click or drag the grouped words in the correct order.</p>
 
-<div class="box" id="source" ondrop="drop(event)" ondragover="allowDrop(event)">
+<div class="box" id="source" onclick="move(event,'destination')" ondrop="drop(event)" ondragover="allowDrop(event)">
 <?php
 $group_spans = array();
 foreach ($grouped_words as $key => $group) {
@@ -128,13 +137,12 @@ foreach ($group_spans as $key => $span) {
 ?>
 </div>
 <br>
-<div class="box" id="destination" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+<div class="box" id="destination" onclick="move(event,'source')" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
 
 <div style="width: 800px;">
 	<p id="solution" style="display:none; padding:10px;"><strong><?php print $Nugget->description; ?></strong></p>
 </div>
-<button style="padding: 15px;" onclick="showAnswer(false);">Show Answer</button>
-<button style="padding: 15px;" onclick="checkAnswer();">Check Answer</button> <span id="check_solution_result"></span>
+<button style="padding: 15px;" onclick="showAnswer(false);">Show Answer</button> <span id="check_solution_result"></span>
 
 <br /><br />
 <button style="padding: 15px;" onclick="location.reload();">Play Again!</button>
@@ -145,6 +153,7 @@ Filter for: <select name="type_category" id="type_category" onchange="updateLoca
 
 <p>Credit for these Maxims goes to <a href="https://seanking.substack.com/p/the-maxims">Sean King's blog</a></p>
 <p>Credit Logical Fallacies goes to <a href="https://yourlogicalfallacyis.com/">yourlogicalfallacyis.com/</a></p>
+<?php $Wisdom->printStats(); ?>
 
 </body>
 </html>

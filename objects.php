@@ -44,8 +44,9 @@ class Wisdom {
 	}
 
 	function printStats() {
+		print "Data Entries Per Type:<br />";
 		foreach ($this->entries as $type => $nuggets) {
-			print count($nuggets) . " " . $type . "s\n";
+			print ucwords($type) . ": " . count($nuggets)  . "<br />\n";
 		}
 	}
 

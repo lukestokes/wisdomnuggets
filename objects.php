@@ -33,30 +33,48 @@ class Nugget {
 	}
 }
 
-class Wisdom {
-	public $entries = array();
+class Chunk {
+	public $type;
+	public $description;
+	public $url;
+	public $nuggets = array();
+	public $included = true;
 
-	function addNugget($type, $category, $description, $title = "") {
-		if (!array_key_exists($type, $this->entries)) {
-			$this->entries[$type] = array();
-		}
-		$this->entries[$type][] = new Nugget($type, $category, $description, $title);
+	function __construct($type, $description, $url) {
+		$this->type = $type;
+		$this->description = $description;
+		$this->url = $url;
 	}
 
-	function printStats() {
-		print "Data Entries Per Type:<br />";
-		foreach ($this->entries as $type => $nuggets) {
-			print ucwords($type) . ": " . count($nuggets)  . "<br />\n";
+	function addNugget($category, $description, $title = "") {
+		$this->nuggets[] = new Nugget($this->type, $category, $description, $title);
+	}
+}
+
+class Wisdom {
+	public $chunks = array();
+
+	function addChunk($chunk) {
+		$this->chunks[] = $chunk;
+	}
+
+	function getChunk($type) {
+		foreach ($this->chunks as $chunk) {
+			if ($chunk->type == $type) {
+				return $chunk;
+			}
 		}
 	}
 
 	function getTypesAndCategories() {
 		$types_and_categories = array();
-		foreach ($this->entries as $type => $nuggets) {
-			foreach ($nuggets as $key => $nugget) {
-				$type_and_category = $type . "|" . $nugget->category;
-				if (!in_array($type_and_category, $types_and_categories)) {
-					$types_and_categories[] = $type_and_category;
+		foreach ($this->chunks as $chunk) {
+			if ($chunk->included) {
+				foreach ($chunk->nuggets as $key => $nugget) {
+					$type_and_category = $chunk->type . "|" . $nugget->category;
+					if (!in_array($type_and_category, $types_and_categories)) {
+						$types_and_categories[] = $type_and_category;
+					}
 				}
 			}
 		}
@@ -73,43 +91,58 @@ class Wisdom {
 		}
 	}
 
+	function getChunkTypes() {
+		$chunk_types = array();
+		foreach ($this->chunks as $chunk) {
+			$chunk_types[] = $chunk->type;
+		}
+		return $chunk_types;
+	}
+
+	function printChunkCheckboxes() {
+		foreach ($this->chunks as $chunk) {
+			$checked = !$chunk->included ? " checked" : "";
+			print "<div>";
+			print "<input" . $checked . " onclick=\"updateLocation();\" name=\"exclude_chunk_" . $chunk->type . "\" id=\"exclude_chunk_" . $chunk->type . "\" type=\"checkbox\">\n";
+			print "<label for=\"exclude_chunk_" . $chunk->type . "\">" . count($chunk->nuggets) . " " . $chunk->description . " <a href=\"" . $chunk->url . "\">(source)</a></label>\n";
+			print "</div>";
+		}
+	}
+
 	function getEntries($entry_type = "", $entry_category = "") {
-		$all_entries = array();
-		foreach ($this->entries as $type => $nuggets) {
-			if ($entry_type == "") {
-				$all_entries = array_merge($all_entries, $nuggets);
-			} else {
-				if ($entry_type == $type) {
-					if ($entry_category == "") {
-						return $nuggets;
-					} else {
-						$filtered_entries = array();
-						foreach ($nuggets as $key => $nugget) {
-							if ($nugget->category == $entry_category) {
-								$filtered_entries[] = $nugget;
-							}
+		$entries = array();
+		if ($entry_type != "") {
+			$chunk = $this->getChunk($entry_type);
+			if ($chunk->included) {
+				if ($entry_category != "") {
+					foreach ($chunk->nuggets as $nugget) {
+						if ($nugget->category == $entry_category) {
+							$entries[] = $nugget;
 						}
-						return $filtered_entries;
+					}
+				} else {
+					$entries = $chunk->nuggets;
+				}
+			}
+			return $entries;
+		} else {
+			foreach ($this->chunks as $chunk) {
+				if ($chunk->included) {
+					foreach ($chunk->nuggets as $nugget) {
+						$entries[] = $nugget;
 					}
 				}
 			}
+			return $entries;
 		}
-		return $all_entries;
 	}
 
 	function getRandom($entry_type = "", $entry_category = "") {
 		$all_entries = $this->getEntries($entry_type, $entry_category);
+		if (count($all_entries) == 0) {
+			return new Nugget("empty","nothing","You've chosen nothing, and you shall have it.");
+		}
 		$key = array_rand($all_entries);
 		return $all_entries[$key];
-	}
-
-	function printRandom($entry_type = "") {
-		$entry = $this->getRandom($entry_type);
-		print $entry->type . "\n";
-		print $entry->category . "\n";
-		if ($entry->title) {
-			print $entry->title . "\n";
-		}
-		print $entry->description . "\n";
 	}
 }

@@ -11,6 +11,11 @@ if (isset($_GET["type_category"]) && $_GET["type_category"] != "") {
 	$type = $values[0];
 	$category = $values[1];
 }
+foreach ($Wisdom->chunks as $chunk) {
+	if (isset($_GET["exclude_chunk_" . $chunk->type]) && $_GET["exclude_chunk_" . $chunk->type] == "on") {
+		$chunk->included = false;
+	}
+}
 $Nugget = $Wisdom->getRandom($type, $category);
 $display = (($Nugget->title == "") ? $Nugget->category : $Nugget->title);
 $display = ucwords($Nugget->type) . ":  " . $display;
@@ -157,8 +162,17 @@ function updateLocation() {
 	var e = document.getElementById("type_category");
 	var type_category = e.value;
 	var base = window.location.href.split('?')[0];
-	location.replace(base + "?type_category=" + type_category);
+	var new_url = base + "?type_category=" + type_category;
+	<?php
+	foreach ($Wisdom->chunks as $chunk) {
+		print "if (document.getElementById(\"exclude_chunk_" . $chunk->type . "\").checked) {";
+		print "new_url += \"&exclude_chunk_" . $chunk->type . "=on\";";
+		print "}";
+	}
+	?>
+	location.replace(new_url);
 }
+
 </script>
 </head>
 <body>
@@ -196,11 +210,10 @@ foreach ($group_spans as $key => $span) {
 <?php $Wisdom->printTypeCategoryOptions($type_category); ?>
 </select>
 
-
 <br/><br/><br/><br/><br/><br/>
-<p>Credit for these Maxims goes to <a href="https://seanking.substack.com/p/the-maxims">Sean King's blog</a></p>
-<p>Credit Logical Fallacies goes to <a href="https://yourlogicalfallacyis.com/">yourlogicalfallacyis.com/</a></p>
-<p><?php $Wisdom->printStats(); ?></p>
+<p>Exclude:</p>
+<?php $Wisdom->printChunkCheckboxes(); ?>
+<p><sub>Code lives <a href="https://github.com/lukestokes/wisdomnuggets">here</a></sub></p>
 
 </body>
 </html>

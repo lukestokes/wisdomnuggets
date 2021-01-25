@@ -67,7 +67,7 @@ p, span, label {
 }
 .box {
   width: 800px;
-  height: 150px;
+  height: 170px;
   padding: 10px;
   border: 1px solid #aaaaaa;
 }
@@ -171,7 +171,11 @@ $group_spans = array();
 foreach ($grouped_words as $key => $group) {
 	$group_spans[] = "<span class=\"group color" . ($key % 5) . "\" id=\"drag" . $key . "\" draggable=\"true\" ondragstart=\"drag(event)\">" . $group . "</span>";
 }
+$original_group_spans = $group_spans;
 shuffle($group_spans);
+if ($original_group_spans == $group_spans) {
+	shuffle($group_spans); // although the original order is a valid random shuffle, it still "feels" broken
+}
 foreach ($group_spans as $key => $span) {
 	print $span;
 }

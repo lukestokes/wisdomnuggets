@@ -53,12 +53,12 @@ $SeansMaxims->addNugget($category, "The smeller is the likely feller. The loudes
 $category = "Human Nature";
 $SeansMaxims->addNugget($category, "The triggers are the guides. If it hurts its because its true or because you fear its true. Never pretend otherwise.");
 $SeansMaxims->addNugget($category, "Offense is always taken, never given.");
-$SeansMaxims->addNugget($category, "Except for tech, there is nothing new under the sun. Any contention that humans or society behaved substantially differently in the past than the present is bullshit. As in any suggestion that humans will behave materially differently in the forseeable future.");
+$SeansMaxims->addNugget($category, "Except for tech, there is nothing new under the sun. Any contention that humans or society behaved substantially differently in the past than the present is bullshit. As is any suggestion that humans will behave materially differently in the forseeable future.");
 
 $category = "Dealing With Exponentials and Network Effects";
-$SeansMaxims->addNugget($category, "After the tipping point (third doubling from 1 percent), exponential growth patterns in technology and biology don't just stop of their own accord until acted upon by some sufficiently capable outside force or until saturation is reached.");
-$SeansMaxims->addNugget($category, "Once any exponential process reaches 1 percent penetration/adoption, you're only 7 potential doublings away from 100 percent.");
-$SeansMaxims->addNugget($category, "Whan an exponential process achieves 8 percent (the tipping point), you're only four doublings away and the odds of saturation are all but certain.");
+$SeansMaxims->addNugget($category, "After the tipping point (third doubling from one percent), exponential growth patterns in technology and biology don't just stop of their own accord until acted upon by some sufficiently capable outside force or until saturation is reached.");
+$SeansMaxims->addNugget($category, "Once any exponential process reaches one percent penetration/adoption, you're only seven potential doublings away from one hundred percent.");
+$SeansMaxims->addNugget($category, "Whan an exponential process achieves eight percent (the tipping point), you're only four doublings away and the odds of saturation are all but certain.");
 $SeansMaxims->addNugget($category, "Network effects are *very* antifragile. Trust them early (but protect your downside, at least until the tipping point).");
 
 $category = "Happiness";

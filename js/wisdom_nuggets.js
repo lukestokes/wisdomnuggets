@@ -1,3 +1,11 @@
+
+$(function() {
+    setTimeout(function() {
+        jQuery("#destination_container").show();
+        jQuery("#source_container").show();
+    }, 2000);
+});
+
 function move(ev, where) {
     if (ev.target.id != "destination" && ev.target.id != "source") {
         ev.preventDefault();
@@ -13,6 +21,19 @@ function showAnswer(as_correct) {
         jQuery("#solution").addClass("alert-success");
         document.getElementById('destination').innerHTML = "";
         document.getElementById('destination').appendChild(document.getElementById('solution'));
+        if (auto_play) {
+            var timeleft = auto_play;
+            var reloadTimer = setInterval(function(){
+              if(timeleft <= 0){
+                clearInterval(reloadTimer);
+              }
+              document.getElementById("progressBar").value = auto_play - timeleft;
+              timeleft -= .5;
+            }, 500);
+            setTimeout(function() {
+                jQuery("#main_form").submit();
+            }, auto_play * 1000);
+        }
     }
     jQuery("#solution").show();
 }

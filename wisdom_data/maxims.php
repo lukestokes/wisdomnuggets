@@ -23,7 +23,7 @@ $SeansMaxims->addNugget($category, "Never mistake a liquidity crisis for a solve
 $SeansMaxims->addNugget($category, "That which can't continue won't no matter how popular or ubiquitous it has become. Find ways to protect yourself against its collapse. Or better, to safely exploit its collapse.");
 $SeansMaxims->addNugget($category, "Every optimized, centralized system is inherently fragile and anti-fragile systems (like evolution) are never optimized/centralized. Seek strategic opportunities to survive/exploit the eventual collapse or failure of optimized systems.");
 $SeansMaxims->addNugget($category, "Seek opportunities to exploit the long term success of anti-fragile systems, especially those benefiting from network effects.");
-$SeansMaxims->addNugget($category, "But remember that even fragile systems can persist far longer than you expect, and markets can stay irrational far longer than you can stay solvent. Avoid leverage, stay liquid and be patient.");
+$SeansMaxims->addNugget($category, "Remember that even fragile systems can persist far longer than you expect, and markets can stay irrational far longer than you can stay solvent. Avoid leverage, stay liquid and be patient.");
 
 $category = "Success";
 $SeansMaxims->addNugget($category, "How you do anything is how you do everything. It's the little habits that count. For instance, showing up for work on time each day is far more important to future success and happiness than which career you pursue.");

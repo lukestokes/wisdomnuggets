@@ -11,15 +11,21 @@ if (isset($_GET["type_category"]) && $_GET["type_category"] != "") {
     $type = $values[0];
     $category = $values[1];
 }
-foreach ($Wisdom->chunks as $chunk) {
-    if (isset($_GET["exclude_chunk_" . $chunk->type]) && $_GET["exclude_chunk_" . $chunk->type] == "on") {
-        $chunk->included = false;
+$auto_play = 5;
+if (isset($_GET["auto_play"]) && $_GET["auto_play"] != "") {
+    $auto_play = strip_tags($_GET["auto_play"]);
+}
+if (isset($_GET["customized"]) && $_GET["customized"] == "true") {
+  foreach ($Wisdom->chunks as $chunk) {
+    $chunk->included = false;
+    if (isset($_GET["include_chunk_" . $chunk->type]) && $_GET["include_chunk_" . $chunk->type] == "on") {
+      $chunk->included = true;
     }
+  }
 }
 $Nugget = $Wisdom->getRandom($type, $category);
-$display = (($Nugget->title == "") ? $Nugget->category : $Nugget->title);
-$display = ucwords($Nugget->type) . ":  " . $display;
-$grouped_words = $Nugget->split(3,5);
+$display = (($Nugget->title == "") ? $Nugget->category : $Nugget->category . ": " . $Nugget->title);
+$grouped_words = $Nugget->createWordGroup();
 
 $color_schemes = array(
     0 => array(
@@ -111,8 +117,9 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
       <p>Click the grouped words in the correct order to complete the phrase.</p>
       <div class="card">
         <div class="card-body">
-          <h2 class="card-title"><?php print $display; ?></h2>
-          <div class="card">
+          <sub><?php print ucwords($Nugget->type); ?></sub>
+          <h4 class="card-title"><?php print $display; ?></h4>
+          <div class="card" id="source_container" style="display: none;">
             <div class="card-body">
               <div class="btn-toolbar" id="source" onclick="move(event,'destination')">
                 <?php
@@ -133,51 +140,52 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
               </div>
             </div>
           </div>
-          <div class="card">
+          <div class="card" id="destination_container" style="display: none;">
             <div class="card-body">
               <div class="btn-toolbar" id="destination" onclick="move(event,'source')">
               </div>
             </div>
           </div>
           <div id="solution" style="display:none;" class="alert" role="alert"><?php print $Nugget->description; ?></div>
-          <button type="button" class="btn btn-info btn-sm" onclick="showAnswer(false);">Show Answer</button>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="showAnswer(false);">Show Answer</button>
         </div>
       </div>
       <div class="row">
-        <button type="button" class="btn btn-primary" onclick="location.reload();">Play Again!</button>
-        <div class="card">
-          <div class="card-body">
-            <div class="form-floating">
-              <select name="type_category" class="form-select" id="type_category" aria-label="Filter for:" onchange="updateLocation();">
-                <?php $Wisdom->printTypeCategoryOptions($type_category); ?>
-              </select>
-              <label for="type_category">Filter for:</label>
-            </div>
-            <p class="card-title">Exclude:</p>
+        <?php
+        if ($auto_play) {
+          print "<progress value=\"0\" max=\"" . ($auto_play-1) . "\" id=\"progressBar\"></progress>";
+        }
+        ?>
+        <form method="GET" id="main_form">
+          <input type="hidden" name="customized" value="true">
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">Play Again!</button>
+          </div>
+          <div class="form-floating">
+            <select name="auto_play" class="form-select" id="auto_play">
+              <?php $Wisdom->printAutoplayOptions($auto_play); ?>
+            </select>
+            <label for="auto_play">Autoplay after:</label>
+          </div>
+          <div class="form-floating">
+            <select name="type_category" class="form-select" id="type_category">
+              <?php $Wisdom->printTypeCategoryOptions($type_category); ?>
+            </select>
+            <label for="type_category">Filter for:</label>
+          </div>
+          <div class="form-group">
+            <p class="card-title">Include: </p>
             <?php $Wisdom->printChunkCheckboxes(); ?>
           </div>
-        </div>
+        </form>
       </div>
       <p><sub>Code lives <a href="https://github.com/lukestokes/wisdomnuggets">here</a></sub></p>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs="crossorigin="anonymous"></script>
-    <script src="js/wisdom_nuggets.js"></script>
     <script>
-    function updateLocation() {
-        var e = document.getElementById("type_category");
-        var type_category = e.value;
-        var base = window.location.href.split('?')[0];
-        var new_url = base + "?type_category=" + type_category;
-        <?php
-        foreach ($Wisdom->chunks as $chunk) {
-            print "if (document.getElementById(\"exclude_chunk_" . $chunk->type . "\").checked) {";
-            print "new_url += \"&exclude_chunk_" . $chunk->type . "=on\";";
-            print "}";
-        }
-        ?>
-        location.replace(new_url);
-    }
+    var auto_play = <?php print $auto_play; ?>
     </script>
+    <script src="js/wisdom_nuggets.js"></script>
   </body>
 </html>

@@ -2,7 +2,7 @@
 
 $LogicalFallacies = new Chunk("fallacy","Logical Fallacies","https://yourlogicalfallacyis.com");
 
-$category = "logic";
+$category = "Logic";
 $LogicalFallacies->addNugget($category, "You misrepresented someone's argument to make it easier to attack.","Strawman");
 $LogicalFallacies->addNugget($category, "You assumed that one part of something has to be applied to all, or other, parts of it; or that the whole must apply to its parts.","Composition / Division");
 $LogicalFallacies->addNugget($category, "You used a personal experience or an isolated example instead of a sound argument or compelling evidence.","Anecdotal");

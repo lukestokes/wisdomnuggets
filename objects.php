@@ -102,9 +102,9 @@ class Wisdom {
 	function printChunkCheckboxes() {
 		foreach ($this->chunks as $chunk) {
 			$checked = !$chunk->included ? " checked" : "";
-			print "<div>";
-			print "<input" . $checked . " onclick=\"updateLocation();\" name=\"exclude_chunk_" . $chunk->type . "\" id=\"exclude_chunk_" . $chunk->type . "\" type=\"checkbox\">\n";
-			print "<label for=\"exclude_chunk_" . $chunk->type . "\">" . count($chunk->nuggets) . " " . $chunk->description . " <a href=\"" . $chunk->url . "\">(source)</a></label>\n";
+			print "<div class=\"form-check\">";
+			print "<input" . $checked . " class=\"form-check-input\" onclick=\"updateLocation();\" name=\"exclude_chunk_" . $chunk->type . "\" id=\"exclude_chunk_" . $chunk->type . "\" type=\"checkbox\">\n";
+			print "<label class=\"form-check-label\" for=\"exclude_chunk_" . $chunk->type . "\">" . count($chunk->nuggets) . " " . $chunk->description . " <a href=\"" . $chunk->url . "\">(source)</a></label>\n";
 			print "</div>";
 		}
 	}

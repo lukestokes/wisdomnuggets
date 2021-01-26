@@ -9,7 +9,7 @@ $SeansMaxims->addNugget($category, "Never make decisions based on how likely som
 $SeansMaxims->addNugget($category, "Never risk a lot for a little. Whether something is \"a lot\" or \"a little\" depends not upon its absolute value but upon its marginal utility *to you*.");
 $SeansMaxims->addNugget($category, "Constantly look for opportunities to risk a little for a lot—opportunities where the gain if you are right far exceeds the loss if you are wrong and the odds are reasonably in your favor.");
 $SeansMaxims->addNugget($category, "Never rely on the recommendations of subject matter experts when making risk decisions (except to simply gain from them a better understanding of the potential upside and downside of the various options).");
-$SeansMaxims->addNugget($category, "Opportunity costs matter only when the cost of being wrong is low. When the cost of being wrong is high, forget about opportunity costs. Far better suffer the opportunity cost of maintaining a 90 day emergency fund that you're unlikely to ever need than it is to need it and not have it.");
+$SeansMaxims->addNugget($category, "Opportunity costs matter only when the cost of being wrong is low. When the cost of being wrong is high, forget about opportunity costs. Far better suffer the opportunity cost of maintaining a ninety day emergency fund that you're unlikely to ever need than it is to need it and not have it.");
 $SeansMaxims->addNugget($category, "Bet on the jockey, not the horse. The right person with the wrong idea is better than the wrong person with the right idea. The former will learn from his mistakes and adapt. The latter won't.");
 $SeansMaxims->addNugget($category, "Bet on the jockey, not the horse. The right person with the wrong idea is better than the wrong person with the right idea. The former will learn from his mistakes and adapt. The latter won't.");
 $SeansMaxims->addNugget($category, "Good decisions are made at the *margin*. Sunk costs are irrelevant to how you should proceed. Forget about them.");
@@ -86,7 +86,7 @@ $SeansMaxims->addNugget($category, "Take nothing personally. It's never really a
 $SeansMaxims->addNugget($category, "Never deny someone a favor when it costs you nothing.");
 $SeansMaxims->addNugget($category, "People seek to connect via compliments. To reject a compliment is therefore to reject the connection. Saying \"thank you\" or \"I'm grateful\", and meaning it, are therefore the only acceptable responses to any compliment.");
 $SeansMaxims->addNugget($category, "Being respected and disdained are two sides of the same coin. It's impossible to gain the respect of some without offending others. If you have genuine admirers, then you will also have genuine detractors. And if you think you have neither, then you're just pandering.");
-$SeansMaxims->addNugget($category, "Consequently you can do nothing worthwhile in life without angering or disappointing lots of people. Just make sure you don't disappoint yourself.");
+$SeansMaxims->addNugget($category, "You can do nothing worthwhile in life without angering or disappointing lots of people. Just make sure you don't disappoint yourself.");
 $SeansMaxims->addNugget($category, "If you can't handle angering or disappointing others, then be resigned to a life of mediocrity and angst.");
 $SeansMaxims->addNugget($category, "When you are wrong, own it, apologize for it and mean it.");
 $SeansMaxims->addNugget($category, "Never trust or aid a narcissist. You won't change or help them, and they will screw you.");

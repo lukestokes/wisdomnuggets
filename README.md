@@ -11,6 +11,7 @@ Ideas for improvement:
 * Let the user remove a nugget so it won't display for them anymore
 * DONE: Split phrases accoring to the size of the phrase. Right now, it just a random selection each time of 3 to 5 words in each group. Small phrases should allow for single word groupings. Large phrases should have larger word groups. Might also want to split things up differently so that last group can't come out smaller.
 * Consider a "hard" mode which doesn't use the color pattern hints
+* Allow users to star items as their favorites, aggregate the data and show number of favorites.
 
 
 Block Chain Integration Ideas:

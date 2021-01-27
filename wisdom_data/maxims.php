@@ -4,7 +4,7 @@ $SeansMaxims = new Chunk("maxim","Life Maxims by Sean King","https://seanking.su
 
 $category = "Risk Management and Decision Making";
 $SeansMaxims->addNugget($category, "Always be right when it matters. It matters most when being wrong is potentially catastrophic. For instance, never allow yourself to mistake a bear for a rock.");
-$SeansMaxims->addNugget($category, "The price of being right when it matters is frequently being wrong when it doesn't (i.e., often mistaking rocks for bears). Forgive yourself these harmless errors and ignore those who would shame you for them.");
+$SeansMaxims->addNugget($category, "The price of being right when it matters is frequently being wrong when it doesn't (for example often mistaking rocks for bears). Forgive yourself these harmless errors and ignore those who would shame you for them.");
 $SeansMaxims->addNugget($category, "Never make decisions based on how likely something is to work but rather based on the cost of it *not* working. When the cost of failure is great, high odds of success are irrelevant. Do not proceed. But when the cost of failure is low, low odds of success are irrelevant. So leap!");
 $SeansMaxims->addNugget($category, "Never risk a lot for a little. Whether something is \"a lot\" or \"a little\" depends not upon its absolute value but upon its marginal utility *to you*.");
 $SeansMaxims->addNugget($category, "Constantly look for opportunities to risk a little for a lot—opportunities where the gain if you are right far exceeds the loss if you are wrong and the odds are reasonably in your favor.");

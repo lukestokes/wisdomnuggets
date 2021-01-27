@@ -1,6 +1,5 @@
 <?php
-include "objects.php";
-include "wisdom_data.php";
+include "header.php";
 
 $type = "";
 $category = "";
@@ -14,6 +13,11 @@ if (isset($_GET["type_category"]) && $_GET["type_category"] != "") {
 $auto_play = 5;
 if (isset($_GET["auto_play"]) && $_GET["auto_play"] != "") {
     $auto_play = strip_tags($_GET["auto_play"]);
+    $_SESSION["auto_play"] = $auto_play;
+} else {
+  if (isset($_SESSION["auto_play"])) {
+    $auto_play = $_SESSION["auto_play"];
+  }
 }
 if (isset($_GET["customized"]) && $_GET["customized"] == "true") {
   foreach ($Wisdom->chunks as $chunk) {
@@ -23,6 +27,16 @@ if (isset($_GET["customized"]) && $_GET["customized"] == "true") {
     }
   }
 }
+
+if (!isset($_SESSION["completed"])) {
+  $_SESSION["completed"] = 0;
+}
+if (isset($_SESSION["previous_answers"]) && isset($_GET["previous_answers"])) {
+  if ($_SESSION["previous_answers"] == $_GET["previous_answers"] && $_GET["previous_answers"] != "") {
+    $_SESSION["completed"]++;
+  }
+}
+
 $Nugget = $Wisdom->getRandom($type, $category);
 $display = (($Nugget->title == "") ? $Nugget->category : $Nugget->category . ": " . $Nugget->title);
 $grouped_words = $Nugget->createWordGroup();
@@ -113,73 +127,92 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
   <body>
     <div class="container-fluid">
       <div class="row m-3">
-      <h4>Wisdom Nuggets: Grow your mind for fun and profit.</h4>
-      <p>Click the grouped words in the correct order to complete the phrase.</p>
-      <div class="card">
-        <div class="card-body">
-          <sub><?php print ucwords($Nugget->type); ?></sub>
-          <h4 class="card-title"><?php print $display; ?></h4>
-          <div class="card" id="source_container" style="display: none;">
-            <div class="card-body">
-              <div class="btn-toolbar" id="source" onclick="move(event,'destination')">
-                <?php
-                //$classes = array('primary','secondary','success','warning','info');
-                $group_buttons = array();
-                foreach ($grouped_words as $key => $group) {
-                    $group_buttons[] = "<button type=\"button\" class=\"btn btn-outline-" . $button_classes[$key % count($button_classes)] . " mx-1\" id=\"drag" . $key . "\" draggable=\"true\" ondragstart=\"drag(event)\">" . $group . "</button>\n";
-                }
-                $original_group_buttons = $group_buttons;
-                shuffle($group_buttons);
-                if ($original_group_buttons == $group_buttons) {
-                    shuffle($group_buttons); // although the original order is a valid random shuffle, it still "feels" broken
-                }
-                foreach ($group_buttons as $key => $button) {
-                    print $button;
-                }
-                ?>
+        <h4>Wisdom Nuggets: Grow your mind for fun and profit.</h4>
+        <p>Click the grouped words in the correct order to complete the phrase. You've completed <?php print $_SESSION["completed"]; ?> this session. <a href="?save">Save your stats</a>.</p>
+        <div class="card">
+          <div class="card-body">
+            <sub><?php print ucwords($Nugget->type); ?></sub>
+            <h4 class="card-title"><?php print $display; ?></h4>
+            <div class="card" id="source_container" style="display: none;">
+              <div class="card-body">
+                <div class="btn-toolbar" id="source" onclick="move(event,'destination')">
+                  <?php
+                  //$classes = array('primary','secondary','success','warning','info');
+                  $group_buttons = array();
+                  $original_button_string = "";
+                  foreach ($grouped_words as $key => $group) {
+                      $button = "<button type=\"button\" class=\"btn btn-outline-" . $button_classes[$key % count($button_classes)] . " mx-1\" id=\"button" . $key . "\">" . $group . "</button>";
+                      $group_buttons[] = $button;
+                      $original_button_string .= $button;
+
+                  }
+                  $original_group_buttons = $group_buttons;
+                  shuffle($group_buttons);
+                  if ($original_group_buttons == $group_buttons) {
+                      shuffle($group_buttons); // although the original order is a valid random shuffle, it still "feels" broken
+                  }
+                  
+                  $_SESSION["previous_answers"] = md5($original_button_string);
+
+                  foreach ($group_buttons as $key => $button) {
+                      print $button;
+                  }
+                  ?>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="card" id="destination_container" style="display: none;">
-            <div class="card-body">
-              <div class="btn-toolbar" id="destination" onclick="move(event,'source')">
+            <div class="card" id="destination_container" style="display: none;">
+              <div class="card-body">
+                <div class="btn-toolbar" id="destination" onclick="move(event,'source')">
+                </div>
               </div>
             </div>
+            <div id="solution" style="display:none;" class="alert" role="alert"><?php print $Nugget->description; ?></div>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="showAnswer(false);">Show Answer</button>
           </div>
-          <div id="solution" style="display:none;" class="alert" role="alert"><?php print $Nugget->description; ?></div>
-          <button type="button" class="btn btn-secondary btn-sm" onclick="showAnswer(false);">Show Answer</button>
         </div>
-      </div>
-      <div class="row">
+        <div class="row">
+          <?php
+          if ($auto_play) {
+            print "<progress value=\"0\" max=\"" . ($auto_play-1) . "\" id=\"progressBar\"></progress>";
+          }
+          ?>
+          <form method="GET" id="main_form">
+            <input type="hidden" name="customized" value="true">
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary">Play Again!</button>
+            </div>
+            <div class="form-floating">
+              <select name="auto_play" class="form-select" id="auto_play">
+                <?php $Wisdom->printAutoplayOptions($auto_play); ?>
+              </select>
+              <label for="auto_play">Autoplay after:</label>
+            </div>
+            <div class="form-floating">
+              <select name="type_category" class="form-select" id="type_category">
+                <?php $Wisdom->printTypeCategoryOptions($type_category); ?>
+              </select>
+              <label for="type_category">Filter for:</label>
+            </div>
+            <div class="form-group">
+              <p class="card-title">Include: </p>
+              <?php $Wisdom->printChunkCheckboxes(); ?>
+            </div>
+            <input type="hidden" id="previous_answers" name="previous_answers" value="">
+          </form>
+        </div>
+        <p><sub>Code lives <a href="https://github.com/lukestokes/wisdomnuggets">here</a></sub></p>
         <?php
-        if ($auto_play) {
-          print "<progress value=\"0\" max=\"" . ($auto_play-1) . "\" id=\"progressBar\"></progress>";
+        print $login_status_string;
+        if (isset($_GET["viewStats"]) && isset($_SESSION['username'])) {
+          print "<p>";
+          $user = new User($_SESSION['username']);
+          $user->read();
+          $user->showSessions();
+          print "</p>";
         }
         ?>
-        <form method="GET" id="main_form">
-          <input type="hidden" name="customized" value="true">
-          <div class="form-group">
-            <button type="submit" class="btn btn-primary">Play Again!</button>
-          </div>
-          <div class="form-floating">
-            <select name="auto_play" class="form-select" id="auto_play">
-              <?php $Wisdom->printAutoplayOptions($auto_play); ?>
-            </select>
-            <label for="auto_play">Autoplay after:</label>
-          </div>
-          <div class="form-floating">
-            <select name="type_category" class="form-select" id="type_category">
-              <?php $Wisdom->printTypeCategoryOptions($type_category); ?>
-            </select>
-            <label for="type_category">Filter for:</label>
-          </div>
-          <div class="form-group">
-            <p class="card-title">Include: </p>
-            <?php $Wisdom->printChunkCheckboxes(); ?>
-          </div>
-        </form>
       </div>
-      <p><sub>Code lives <a href="https://github.com/lukestokes/wisdomnuggets">here</a></sub></p>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs="crossorigin="anonymous"></script>

@@ -23,6 +23,7 @@ function showAnswer(as_correct) {
 
         characters_to_share = 180;
         share_text = jQuery("#solution").html().substring(0,characters_to_share);
+        share_text = share_text.replace("'","");
         if (jQuery("#solution").html().length > characters_to_share) {
             share_text += "...";
         }

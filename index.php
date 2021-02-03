@@ -73,17 +73,34 @@ $color_scheme = $color_schemes[$key];
 <!doctype html>
 <html lang="en">
   <head>
+    <?php
+      $title = "Wisdom Nuggets! Have Fun Programming Your Brain";
+      $description = "Reality is the result of our actions initiated by our thoughts. Have fun playing a game to help you memorize key principles, maxims, logical fallacies, and more for clear thinking and success. To improve the world, start with yourself.";
+      $image = "https://wisdomnuggets.lukestokes.info/images/sriyantra.png";
+      $url = "https://wisdomnuggets.lukestokes.info/";
+    ?>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta property="og:url"           content="https://wisdomnuggets.lukestokes.info/" />
-    <meta property="og:type"          content="website" />
-    <meta property="og:title"         content="Wisdom Nuggets! Have Fun Programming Your Brain" />
-    <meta property="og:description"   content="Reality is the result of our actions initiated by our thoughts. Have fun playing a game to help you memorize key principles, maxims, logical fallacies and more for clear thinking and success." />
-    <meta name="description" content="Reality is the result of our actions initiated by our thoughts. Have fun playing a game to help you memorize key principles, maxims, logical fallacies and more for clear thinking and success.">
-    <meta property="og:image"         content="https://wisdomnuggets.lukestokes.info/images/sriyantra.png" />
+
+    <meta name="description" content="<?php print $description; ?>">
     <meta name="author" content="Luke Stokes">
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
+
+    <!-- Facebook -->
+    <meta property="og:url"           content="<?php print $url; ?>" />
+    <meta property="og:type"          content="website" />
+    <meta property="og:title"         content="<?php print $title; ?>" />
+    <meta property="og:description"   content="<?php print $description; ?>" />
+    <meta property="og:image"         content="<?php print $image; ?>" />
+
+    <!-- Twitter -->
+    <meta name="twitter:creator" content="@lukestokes">
+    <meta name="twitter:title" content="<?php print $title; ?>">
+    <meta name="twitter:description" content="<?php print $description; ?>">
+    <meta name="twitter:image" content="<?php print $image; ?>">
+
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 
@@ -115,17 +132,15 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
 ?>
 
 </style>
-  <title>Wisdom Nuggets! Have Fun Programming Your Brain</title>
+  <title><?php print $title; ?></title>
   </head>
   <body>
     <div class="container-fluid">
       <div class="row m-3">
-      <h4>Wisdom Nuggets! Have Fun Programming Your Brain</h4>
+      <h4><?php print $title; ?></h4>
       <p>Click the grouped words in the correct order to complete the phrase. <a data-toggle="collapse" href="#whyText">Why?</a></p>
       <div class="collapse" id="whyText">
-        <div class="alert alert-primary" role="alert">
-        Reality is the result of our actions initiated by our thoughts. Have fun playing a game to help you memorize key principles, maxims, logical fallacies and more for clear thinking and success.
-        </div>
+        <div class="alert alert-primary" role="alert"><?php print $description; ?></div>
       </div>
       <div class="card">
         <div class="card-body">

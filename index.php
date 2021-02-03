@@ -80,8 +80,10 @@ $color_scheme = $color_schemes[$key];
     <meta property="og:type"          content="website" />
     <meta property="og:title"         content="Wisdom Nuggets! Have Fun Programming Your Brain" />
     <meta property="og:description"   content="Reality is the result of our actions initiated by our thoughts. Have fun playing a game to help you memorize key principles, maxims, logical fallacies and more for clear thinking and success." />
+    <meta name="description" content="Reality is the result of our actions initiated by our thoughts. Have fun playing a game to help you memorize key principles, maxims, logical fallacies and more for clear thinking and success.">
     <meta property="og:image"         content="https://wisdomnuggets.lukestokes.info/images/sriyantra.png" />
-
+    <meta name="author" content="Luke Stokes">
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 
@@ -118,8 +120,13 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
   <body>
     <div class="container-fluid">
       <div class="row m-3">
-      <h4>Wisdom Nuggets: Grow your mind for fun and profit.</h4>
-      <p>Click the grouped words in the correct order to complete the phrase.</p>
+      <h4>Wisdom Nuggets! Have Fun Programming Your Brain</h4>
+      <p>Click the grouped words in the correct order to complete the phrase. <a data-toggle="collapse" href="#whyText">Why?</a></p>
+      <div class="collapse" id="whyText">
+        <div class="alert alert-primary" role="alert">
+        Reality is the result of our actions initiated by our thoughts. Have fun playing a game to help you memorize key principles, maxims, logical fallacies and more for clear thinking and success.
+        </div>
+      </div>
       <div class="card">
         <div class="card-body">
           <sub><?php print ucwords($Nugget->type); ?></sub>
@@ -198,8 +205,9 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
       <!-- Your share button code -->
       <div class="fb-share-button" data-href="https://wisdomnuggets.lukestokes.info/" data-layout="button_count"></div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs="crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script>
     var auto_play = <?php print $auto_play; ?>;
     var completed = false;

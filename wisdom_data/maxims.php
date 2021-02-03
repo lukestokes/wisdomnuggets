@@ -7,7 +7,7 @@ $SeansMaxims->addNugget($category, "Always be right when it matters. It matters 
 $SeansMaxims->addNugget($category, "The price of being right when it matters is frequently being wrong when it doesn't (for example often mistaking rocks for bears). Forgive yourself these harmless errors and ignore those who would shame you for them.");
 $SeansMaxims->addNugget($category, "Never make decisions based on how likely something is to work but rather based on the cost of it *not* working. When the cost of failure is great, high odds of success are irrelevant. Do not proceed. But when the cost of failure is low, low odds of success are irrelevant. So leap!");
 $SeansMaxims->addNugget($category, "Never risk a lot for a little. Whether something is \"a lot\" or \"a little\" depends not upon its absolute value but upon its marginal utility *to you*.");
-$SeansMaxims->addNugget($category, "Constantly look for opportunities to risk a little for a lot—opportunities where the gain if you are right far exceeds the loss if you are wrong and the odds are reasonably in your favor.");
+$SeansMaxims->addNugget($category, "Constantly look for opportunities to risk a little for a lot-opportunities where the gain if you are right far exceeds the loss if you are wrong and the odds are reasonably in your favor.");
 $SeansMaxims->addNugget($category, "Never rely on the recommendations of subject matter experts when making risk decisions (except to simply gain from them a better understanding of the potential upside and downside of the various options).");
 $SeansMaxims->addNugget($category, "Opportunity costs matter only when the cost of being wrong is low. When the cost of being wrong is high, forget about opportunity costs. Far better suffer the opportunity cost of maintaining a ninety day emergency fund that you're unlikely to ever need than it is to need it and not have it.");
 $SeansMaxims->addNugget($category, "Bet on the jockey, not the horse. The right person with the wrong idea is better than the wrong person with the right idea. The former will learn from his mistakes and adapt. The latter won't.");
@@ -64,7 +64,7 @@ $SeansMaxims->addNugget($category, "Network effects are *very* antifragile. Trus
 $category = "Happiness";
 $SeansMaxims->addNugget($category, "There is no happiness without gratitude.");
 $SeansMaxims->addNugget($category, "Be always content, never satisfied.");
-$SeansMaxims->addNugget($category, "Entitlement is the opposite of gratitude. Life owes you nothing—governments, people and \"society\" even less.");
+$SeansMaxims->addNugget($category, "Entitlement is the opposite of gratitude. Life owes you nothing-governments, people and \"society\" even less.");
 $SeansMaxims->addNugget($category, "Do your dharma and detach from outcomes.");
 $SeansMaxims->addNugget($category, "After a certain point, wealth and goods have diminishing marginal utility. Experiences do not. Prioritize experiences. Judge possessions primarily by the nature and quality of the continuing experiences they provide.");
 $SeansMaxims->addNugget($category, "*Everything* in life comes at a price, most commonly a trade-off. Accepting the reality of trade-offs results is gratitude and contentment. Denying it or resisting them results in resentment and misery.");
@@ -111,7 +111,7 @@ $SeansMaxims->addNugget($category, "Have no secrets (except for your crypto keys
 
 $category = "General";
 $SeansMaxims->addNugget($category, "Nothing worthwhile comes easily. Not even love.");
-$SeansMaxims->addNugget($category, "What you resist persists! Don't resist what you fear or hate. Subvert it through innovation instead. \"You never change things by fighting the existing reality. To change something build a new model that makes the existing reality obsolete.\" —Buckminster Fuller");
+$SeansMaxims->addNugget($category, "What you resist persists! Don't resist what you fear or hate. Subvert it through innovation instead. \"You never change things by fighting the existing reality. To change something build a new model that makes the existing reality obsolete.\" -Buckminster Fuller");
 $SeansMaxims->addNugget($category, "Feelings are just feelings. They are not problems until we act on them before getting to the bottom of them.");
 
 $Wisdom->addChunk($SeansMaxims);

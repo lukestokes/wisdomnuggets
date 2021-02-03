@@ -76,6 +76,11 @@ $color_scheme = $color_schemes[$key];
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:url"           content="https://wisdomnuggets.lukestokes.info/" />
+    <meta property="og:type"          content="website" />
+    <meta property="og:title"         content="Wisdom Nuggets! Have Fun Programming Your Brain" />
+    <meta property="og:description"   content="Reality is the result of our actions initiated by our thoughts. Have fun playing a game to help you memorize key principles, maxims, logical fallacies and more for clear thinking and success." />
+    <meta property="og:image"         content="https://wisdomnuggets.lukestokes.info/images/sriyantra.png" />
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
@@ -108,7 +113,7 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
 ?>
 
 </style>
-  <title>Wisdom Nuggets! Memorize Cool Sh*t</title>
+  <title>Wisdom Nuggets! Have Fun Programming Your Brain</title>
   </head>
   <body>
     <div class="container-fluid">
@@ -179,12 +184,25 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
           </div>
         </form>
       </div>
-      <p><sub>Code lives <a href="https://github.com/lukestokes/wisdomnuggets">here</a></sub></p>
+      <p><sub>Code lives <a href="https://github.com/lukestokes/wisdomnuggets">here</a>. <a href="https://sri-yantra.lukestokes.info/">Sri Yantra</a>, anyone?</sub></p>
+      <script>
+      // load facebook share features
+      (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
+      fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+      </script>
+      <!-- Your share button code -->
+      <div class="fb-share-button" data-href="https://wisdomnuggets.lukestokes.info/" data-layout="button_count"></div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs="crossorigin="anonymous"></script>
     <script>
-    var auto_play = <?php print $auto_play; ?>
+    var auto_play = <?php print $auto_play; ?>;
+    var completed = false;
     </script>
     <script src="js/wisdom_nuggets.js"></script>
   </body>

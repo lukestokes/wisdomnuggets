@@ -3,11 +3,11 @@ $(function() {
     setTimeout(function() {
         jQuery("#destination_container").show();
         jQuery("#source_container").show();
-    }, 2000);
+    }, 1000);
 });
 
 function move(ev, where) {
-    if (ev.target.id != "destination" && ev.target.id != "source") {
+    if (ev.target.id != "destination" && ev.target.id != "source" && !completed) {
         ev.preventDefault();
         document.getElementById(where).appendChild(ev.target);
         if (where == "destination" && document.getElementById("source").children.length == 0) {
@@ -18,11 +18,36 @@ function move(ev, where) {
 
 function showAnswer(as_correct) {
     if (as_correct) {
+        completed = true;
         jQuery("#solution").addClass("alert-success");
-        var solution = document.getElementById('destination').innerHTML.trim();
+        var solution = jQuery("#destination").html().trim();
         jQuery("#previous_answers").val(MD5(solution));
+        characters_to_share = 180;
+        share_text = jQuery("#solution").html().substring(0,characters_to_share);
+        share_text = share_text.replace("'","");
+        if (jQuery("#solution").html().length > characters_to_share) {
+            share_text += "...";
+        }
+        share_button = "<br /><a class=\"twitter-hashtag-button\" href=\"https://twitter.com/intent/tweet?\" data-hashtags=\"wisdomnuggets\" data-text='\"" + share_text + "\"' data-url=\"https://wisdomnuggets.lukestokes.info\" target=\"_blank\">Tweet</a>";
+        jQuery("#solution").append(share_button);
         document.getElementById('destination').innerHTML = "";
         document.getElementById('destination').appendChild(document.getElementById('solution'));
+        // load Twiter share features
+        window.twttr = (function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0],
+            t = window.twttr || {};
+          if (d.getElementById(id)) return t;
+          js = d.createElement(s);
+          js.id = id;
+          js.src = "https://platform.twitter.com/widgets.js";
+          fjs.parentNode.insertBefore(js, fjs);
+
+          t._e = [];
+          t.ready = function(f) {
+            t._e.push(f);
+          };
+          return t;
+        }(document, "script", "twitter-wjs"));
         if (auto_play) {
             var timeleft = auto_play;
             var reloadTimer = setInterval(function(){

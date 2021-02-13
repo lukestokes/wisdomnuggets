@@ -1,7 +1,7 @@
 <?php
 
 $RayDalioPrinciples = new Chunk("principle","Ray Dalio Principles","https://www.nateliason.com/notes/principles-ray-dalio");
-$RayDalioPrinciples->included = false; // don't show this by default
+//$RayDalioPrinciples->included = false; // don't show this by default
 
 $category = "Life: Embrace Reality and Deal With It";
 $RayDalioPrinciples->addNugget($category, "Truth, an accurate understanding of reality, is the essential foundation for any good outcome.");

@@ -10,7 +10,7 @@ if (isset($_GET["type_category"]) && $_GET["type_category"] != "") {
     $type = $values[0];
     $category = $values[1];
 }
-$auto_play = 5;
+$auto_play = 0;
 if (isset($_GET["auto_play"]) && $_GET["auto_play"] != "") {
     $auto_play = strip_tags($_GET["auto_play"]);
     $_SESSION["auto_play"] = $auto_play;

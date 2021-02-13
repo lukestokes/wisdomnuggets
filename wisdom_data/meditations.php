@@ -1,7 +1,7 @@
 <?php
 
 $Meditations = new Chunk("meditations","Marcus Aurelius Meditations","https://www.goodreads.com/author/quotes/17212.Marcus_Aurelius");
-$Meditations->included = false; // don't show this by default
+//$Meditations->included = false; // don't show this by default
 
 $category = "Stoicism";
 /*

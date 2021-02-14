@@ -1,10 +1,9 @@
 <?php
 
 $Meditations = new Chunk("meditations","Marcus Aurelius Meditations","https://www.goodreads.com/author/quotes/17212.Marcus_Aurelius");
-//$Meditations->included = false; // don't show this by default
 
 $category = "Stoicism";
-/*
+
 $Meditations->addNugget($category, "You have power over your mind - not outside events. Realize this, and you will find strength.");
 $Meditations->addNugget($category, "Dwell on the beauty of life. Watch the stars, and see yourself running with them.");
 $Meditations->addNugget($category, "The happiness of your life depends upon the quality of your thoughts.");
@@ -44,9 +43,7 @@ $Meditations->addNugget($category, "Do not indulge in dreams of having what you 
 $Meditations->addNugget($category, "Look back over the past, with its changing empires that rose and fell, and you can foresee the future too.");
 $Meditations->addNugget($category, "For it is in your power to retire into yourself whenever you choose.");
 $Meditations->addNugget($category, "Perfection of character is this: to live each day as if it were your last, without frenzy, without apathy, without pretence.");
-*/
 $Meditations->addNugget($category, "The universe is change; our life is what our thoughts make it.");
-/*
 $Meditations->addNugget($category, "Remember that very little is needed to make a happy life.");
 $Meditations->addNugget($category, "Never esteem anything as of advantage to you that will make you break your word or lose your self-respect.");
 $Meditations->addNugget($category, "A man's worth is no greater than the worth of his ambitions.");
@@ -90,5 +87,5 @@ $Meditations->addNugget($category, "No one can lose either the past or the futur
 $Meditations->addNugget($category, "Choose not to be harmed-and you won't feel harmed. Don't feel harmed-and you haven't been.");
 $Meditations->addNugget($category, "A man must stand erect, not be kept erect by others.");
 $Meditations->addNugget($category, "Every living organism is fulfilled when it follows the right path for its own nature.");
-*/
+
 $Wisdom->addChunk($Meditations);

@@ -22,14 +22,17 @@ class Session {
 }
 
 class User {
+    public $actor;
     public $fio_address;
-    public $password_hash;
+    public $fio_public_key;
     public $last_login;
     public $last_login_ip;
     public $auto_play;
     public $sessions = array();
+    public $fio_addresses = array();
 
-    function __construct($fio_address) {
+    function __construct($actor, $fio_address = "") {
+        $this->actor = $actor;
         $this->fio_address = $fio_address;
     }
 
@@ -47,8 +50,9 @@ class User {
     }
     function getData() {
         $data = array(
+            'actor' => $this->actor,
             'fio_address' => $this->fio_address,
-            'password_hash' => $this->password_hash,
+            'fio_public_key' => $this->fio_public_key,
             'last_login' => $this->last_login,
             'last_login_ip' => $this->last_login_ip,
             'auto_play' => $this->auto_play,
@@ -57,37 +61,18 @@ class User {
         return $data;
     }
     function loadData($data) {
+        $this->actor = $data['actor'];
         $this->fio_address = $data['fio_address'];
-        $this->password_hash = $data['password_hash'];
+        $this->fio_public_key = $data['fio_public_key'];
         $this->last_login = $data['last_login'];
         $this->last_login_ip = $data['last_login_ip'];
         $this->auto_play = $data['auto_play'];
         $this->sessions = $data['sessions'];
     }
     function getUserFilename() {
-        $file_name = "./user_data/" . md5($this->fio_address) . ".txt"; // change this to a non-web accessible folder
+        $file_name = "./user_data/" . $this->actor . "_" . md5($this->fio_address) . ".txt"; // change this to a non-web accessible folder
         return $file_name;
     }
-    function login($plaintext) {
-        $this->read();
-        if ($this->checkPassword($plaintext)) {
-            $this->last_login = time();
-            $this->last_login_ip = $_SERVER['REMOTE_ADDR'];
-            $this->save();
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    function checkPassword($plaintext) {
-        return password_verify($plaintext, $this->password_hash);
-    }
-
-    function updatePassword($plaintext) {
-        $this->password_hash = password_hash($plaintext, PASSWORD_DEFAULT);
-    }
-
     function save() {
         file_put_contents($this->getUserFilename(),serialize($this->getData()));
     }
@@ -100,6 +85,56 @@ class User {
     function userExists() {
         $seralized_data = @file_get_contents($this->getUserFilename());
         return ($seralized_data);
+    }
+    function getFIOPublicKey($client) {
+        if ($this->fio_public_key != "") {
+            return $this->fio_public_key;
+        }
+        $params = array(
+            "account_name" => $this->actor
+        );
+        try {
+          $response = $client->chain()->getAccount($params);
+          //var_dump($response);
+          foreach ($response->permissions as $key => $permission) {
+              //var_dump($permission);
+              if ($permission->perm_name == "active") {
+                  if (isset($permission->required_auth->keys[0])) {
+                      $this->fio_public_key = $permission->required_auth->keys[0]->key;
+                  }
+              }
+          }
+        } catch(\Exception $e) {
+            //print $e->getMessage() . "\n";
+        }
+        return $this->fio_public_key;
+    }
+
+    function getFIOAddresses($client) {
+        if (count($this->fio_addresses)) {
+            return $this->fio_addresses;
+        }
+        $fio_public_key = $this->getFIOPublicKey($client);
+        $params = array(
+            "fio_public_key" => $fio_public_key,
+            "limit" => 100,
+            "offeset" => 0
+        );
+        try {
+            $result = $client->chain()->getFioAddresses($params);
+            if (isset($result->fio_addresses[0])) {
+                foreach ($result->fio_addresses as $key => $fio_address_object) {
+                    $this->fio_addresses[] = $fio_address_object->fio_address;
+                }
+            }
+        } catch(\Exception $e) {
+            //print "getFIOAddress error: " . $e->getMessage();
+        }
+        return $this->fio_addresses;
+    }
+
+    function isOwnedFIOAddress($client, $fio_address) {
+        return in_array($fio_address, $this->getFIOAddresses($client));
     }
 
 }
@@ -178,6 +213,12 @@ class Wisdom {
             if ($chunk->type == $type) {
                 return $chunk;
             }
+        }
+    }
+
+    function setActiveChunks($types) {
+        foreach ($this->chunks as $chunk) {
+            $chunk->included = in_array($chunk->type, $types);
         }
     }
 

@@ -1,4 +1,7 @@
 <?php
+require_once __DIR__ . '/vendor/autoload.php';
+use xtype\Fio\Client;
+$client = new Client('http://fio.greymass.com');
 include "header.php";
 
 $type = "";
@@ -149,11 +152,11 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
 </style>
   <title><?php print $title; ?></title>
   </head>
-  <body>
+  <body onload="restoreSession()">
     <div class="container-fluid">
       <div class="row m-3">
         <h4><?php print $title; ?></h4>
-        <p>Click the grouped words in the correct order to complete the phrase. <a data-toggle="collapse" href="#whyText">Why?</a></p>
+        <p>Click the grouped words in the correct order to complete the phrase. <a data-toggle="collapse" href="#whyText">Why?</a> <?php print $login_status_string; ?></p>
         <div class="collapse" id="whyText">
           <div class="alert alert-primary" role="alert"><?php print $description; ?></div>
         </div>
@@ -203,6 +206,8 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
             ?>
             <form method="GET" id="main_form">
               <input type="hidden" name="customized" value="true">
+              <input type="hidden" id="actor" name="actor" value="">
+              <input type="hidden" id="identity_proof" name="identity_proof" value=''>
               <div class="form-group">
                 <button type="submit" class="btn btn-primary">Play Again!</button>
               </div>
@@ -228,18 +233,17 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
         </div>
         <p><sub>Code lives <a href="https://github.com/lukestokes/wisdomnuggets">here</a>. <a href="https://sri-yantra.lukestokes.info/">Sri Yantra</a>, anyone?</sub></p>
 
-        <p>You've completed <?php print $_SESSION["completed"]; ?> this session. <a href="?save">Save your stats</a>.</p>
+        <p>You've completed <?php print $_SESSION["completed"]; ?> this session. <a href="?save">Save stats</a>. <a href="?viewStats">View stats</a>.</p>
         <?php
-        print $login_status_string;
         if (isset($_GET["viewStats"]) && isset($_SESSION['username'])) {
           print "<p>";
-          $user = new User($_SESSION['username']);
+          $user = new User($_SESSION['username'],$_SESSION['fio_address']);
           $user->read();
           $user->showSessions();
           print "</p>";
         }
-        ?>
 
+        ?>
         <script>
         // load facebook share features
         (function(d, s, id) {
@@ -260,7 +264,39 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
     <script>
     var auto_play = <?php print $auto_play; ?>;
     var completed = false;
+    <?php if (isset($_GET{'login'})) { ?>
+      $(function() {
+        login();
+      });
+    <?php } ?>
+    <?php if (isset($_GET{'logout'})) { ?>
+      $(function() {
+        logout();
+      });
+    <?php } ?>
     </script>
+    <script src="https://unpkg.com/anchor-link@3"></script>
+    <script src="https://unpkg.com/anchor-link-browser-transport@3"></script>
     <script src="js/wisdom_nuggets.js"></script>
+    <script>
+    // app identifier, should be set to the eosio contract account if applicable
+    const identifier = 'wisdomnuggets'
+    // initialize the browser transport
+    const transport = new AnchorLinkBrowserTransport()
+    // initialize the link
+    const link = new AnchorLink(
+        {
+          transport,
+          chains: [
+              {
+                  chainId: '21dcae42c0182200e93f954a074011f9048a7624c6fe81d3c9541a614a88bd1c',
+                  nodeUrl: 'https://fio.greymass.com',
+              }
+          ],
+        }
+      );
+    // the session instance, either restored using link.restoreSession() or created with link.login()
+    let session
+    </script>
   </body>
 </html>

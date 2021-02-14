@@ -81,9 +81,8 @@ $login_status_string = "";
 
 if (isset($_GET["identity_proof"]) && $_GET["identity_proof"] != "") {
   $proof = json_decode($_GET["identity_proof"], true);
-  $guzzle = new GuzzleHttp\Client();
   try {
-    $identity_response = $guzzle->post('https://eosio.greymass.com/prove', [
+    $identity_response = $client->post('https://eosio.greymass.com/prove', [
         GuzzleHttp\RequestOptions::JSON => ['proof' => $proof] // or 'json' => [...]
     ]);
     $identity_results = json_decode($identity_response->getBody(), true);

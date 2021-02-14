@@ -98,16 +98,19 @@ class User {
             "account_name" => $this->actor
         );
         try {
-          $response = $client->chain()->getAccount($params);
-          //var_dump($response);
-          foreach ($response->permissions as $key => $permission) {
+            $get_account_response = $client->post('/v1/chain/get_account', [
+                GuzzleHttp\RequestOptions::JSON => $params
+            ]);
+            $response = json_decode($get_account_response->getBody());
+            //var_dump($response);
+            foreach ($response->permissions as $key => $permission) {
               //var_dump($permission);
               if ($permission->perm_name == "active") {
                   if (isset($permission->required_auth->keys[0])) {
                       $this->fio_public_key = $permission->required_auth->keys[0]->key;
                   }
               }
-          }
+            }
         } catch(\Exception $e) {
             //print $e->getMessage() . "\n";
         }
@@ -125,7 +128,10 @@ class User {
             "offeset" => 0
         );
         try {
-            $result = $client->chain()->getFioAddresses($params);
+            $get_fio_addresses_response = $client->post('/v1/chain/get_fio_addresses', [
+                GuzzleHttp\RequestOptions::JSON => $params
+            ]);
+            $result = json_decode($get_fio_addresses_response->getBody());
             if (isset($result->fio_addresses[0])) {
                 foreach ($result->fio_addresses as $key => $fio_address_object) {
                     $this->fio_addresses[] = $fio_address_object->fio_address;

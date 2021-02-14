@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-use xtype\Fio\Client;
-$client = new Client('http://fio.greymass.com');
+$client = new GuzzleHttp\Client(['base_uri' => 'http://fio.greymass.com']);
 include "header.php";
 ?>
 <!doctype html>

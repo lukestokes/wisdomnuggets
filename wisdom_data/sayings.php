@@ -8,7 +8,7 @@ $Sayings->addNugget($category, "The man who says he can, and the man who says he
 $Sayings->addNugget($category, "Your life is what your thoughts make it.");
 $Sayings->addNugget($category, "Real knowledge is to know the extent of one's ignorance.");
 $Sayings->addNugget($category, "The man who asks a question is a fool for a minute, the man who does not ask is a fool for life.");
-$Sayings->addNugget($category, "The journey with a 1000 miles begins with one step.");
+$Sayings->addNugget($category, "The journey with a thousand miles begins with one step.");
 $Sayings->addNugget($category, "Choose a job you love, and you will never have to work a day in your life.");
 $Sayings->addNugget($category, "You are what you think.");
 $Sayings->addNugget($category, "Looking at small advantages prevents great affairs from being accomplished.");
@@ -66,7 +66,7 @@ $Sayings->addNugget($category, "I want you to be everything that's you, deep at 
 $Sayings->addNugget($category, "The object of the superior man is truth.");
 $Sayings->addNugget($category, "When you have faults, do not fear to abandon them.");
 $Sayings->addNugget($category, "To go beyond is as wrong as to fall short.");
-$Sayings->addNugget($category, "If you think in terms of a year, plant a seed; if in terms of ten years, plant trees; if in terms of 100 years, teach the people.");
+$Sayings->addNugget($category, "If you think in terms of a year, plant a seed; if in terms of ten years, plant trees; if in terms of one hundred years, teach the people.");
 $Sayings->addNugget($category, "If you look into your own heart, and you find nothing wrong there, what is there to worry about? What is there to fear?");
 $Sayings->addNugget($category, "It does not matter how slowly you go as long as you do not stop.");
 $Sayings->addNugget($category, "Virtue is not left to stand alone. He who practices it will have neighbors.");

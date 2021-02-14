@@ -185,7 +185,7 @@ class Nugget {
     function createWordGroup() {
         $smallest_group = 3;
         $largest_group = 5;
-        $words = str_word_count($this->description, 1);
+        $words = explode(" ", $this->description);
         if (count($words) <= 8) {
             $smallest_group = 2;
             $largest_group = 3;

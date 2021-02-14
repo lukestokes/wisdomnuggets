@@ -71,8 +71,12 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
   <body onload="restoreSession()">
     <div class="container-fluid">
       <div class="row m-3">
+        <?php if ($_SESSION["completed"] < 2 || !isset($_SESSION['username'])) { ?>
         <h4><?php print $title; ?></h4>
-        <div>Click the grouped words in the correct order to complete the phrase. <a data-toggle="collapse" href="#whyText">Why?</a> <?php print $login_status_string; ?></div>
+        <?php } ?>
+        <div>
+          <?php if ($_SESSION["completed"] < 2 || !isset($_SESSION['username'])) { ?>Click the grouped words in the correct order to complete the phrase. <a data-toggle="collapse" href="#whyText">Why?</a><?php } ?> <?php print $login_status_string; ?>
+        </div>
         <div class="collapse" id="whyText">
           <div class="alert alert-primary" role="alert"><?php print $description; ?></div>
         </div>

@@ -23,7 +23,7 @@ $Sayings->addNugget($category, "When it is obvious that the goals cannot be reac
 $Sayings->addNugget($category, "The essence of knowledge is, having it, to use it.");
 $Sayings->addNugget($category, "One joy dispels a hundred cares.");
 $Sayings->addNugget($category, "Anyone can find the switch after the lights are on.");
-$Sayings->addNugget($category, "When you see a good person, think of becoming like her/him. When you see someone not so good, reflect on your own weak points.");
+$Sayings->addNugget($category, "When you see a good person, think of becoming like her or him. When you see someone not so good, reflect on your own weak points.");
 $Sayings->addNugget($category, "I slept and dreamt life is beauty, I woke and found life is duty.");
 $Sayings->addNugget($category, "They must often change who would remain constant in happiness and wisdom.");
 $Sayings->addNugget($category, "Don't complain about the snow on your neighbor's roof when your own doorstep is unclean.");
@@ -32,7 +32,7 @@ $Sayings->addNugget($category, "Be not ashamed of mistakes and thus make them cr
 $Sayings->addNugget($category, "The superior man is modest in his speech, but exceeds in his actions.");
 $Sayings->addNugget($category, "Be strict with yourself but least reproachful of others and complaint is kept afar.");
 $Sayings->addNugget($category, "Roads were made for journeys not destinations.");
-$Sayings->addNugget($category, "No matter how busy you make think you are you must find time for reading, or surrender yourself to self-chosen ignorance.");
+$Sayings->addNugget($category, "No matter how busy you may think you are you must find time for reading, or surrender yourself to self-chosen ignorance.");
 $Sayings->addNugget($category, "Think of tomorrow, the past can't be mended.");
 $Sayings->addNugget($category, "Respect yourself and others will respect you.");
 $Sayings->addNugget($category, "To be wronged is nothing, unless you continue to remember it.");

@@ -14,6 +14,7 @@ Ideas for improvement:
 * Allow users to star items as their favorites, aggregate the data and show number of favorites.
 * Move user storage stuff from flat files to a database or something like https://sleekdb.github.io/
 
+
 Block Chain Integration Ideas:
 
 * DONE: Login with FIO

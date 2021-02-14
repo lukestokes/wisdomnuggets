@@ -7,10 +7,10 @@ class Session {
     public $session_start_time;
     public $completed;
     
-    function __construct($User,$session_start_time,$completed) {
-        $this->login_time = $User->last_login;
-        $this->login_ip = $User->last_login_ip;
-        $this->fio_address = $User->fio_address;
+    function __construct($login_time,$login_ip,$fio_address,$session_start_time,$completed) {
+        $this->login_time = $login_time;
+        $this->login_ip = $login_ip;
+        $this->fio_address = $fio_address;
         $this->session_start_time = $session_start_time;
         $this->completed = $completed;
     }
@@ -24,6 +24,7 @@ class Session {
 }
 
 class User {
+    public $_id;
     public $actor;
     public $fio_address = "";
     public $fio_public_key;
@@ -34,14 +35,26 @@ class User {
     public $fio_addresses = array();
     public $types = array();
 
+    // exclude from object properties
+    public $dataDir;
+    public $userStore;
+
     function __construct($actor) {
         $this->actor = $actor;
+        $this->dataDir = __DIR__ . "/user_data";
+        $this->userStore = new \SleekDB\Store("users", $this->dataDir);
     }
 
     function saveSession($session_start_time, $completed, $auto_play, $types) {
         $this->auto_play = $auto_play;
         $this->types = $types;
-        $this->sessions[] = new Session($this, $session_start_time, $completed);
+        $this->sessions[] = new Session(
+            $this->last_login,
+            $this->last_login_ip,
+            $this->fio_address,
+            $session_start_time,
+            $completed
+        );
         $this->save();
     }
     function showSessions() {
@@ -51,44 +64,44 @@ class User {
             $last_login = $Session->login_time;
         }
     }
-    function getData() {
-        $data = array(
-            'actor' => $this->actor,
-            'fio_address' => $this->fio_address,
-            'fio_public_key' => $this->fio_public_key,
-            'last_login' => $this->last_login,
-            'last_login_ip' => $this->last_login_ip,
-            'auto_play' => $this->auto_play,
-            'sessions' => $this->sessions,
-            'fio_addresses' => $this->fio_addresses,
-            'types' => $this->types,
-        );
-        return $data;
-    }
     function loadData($data) {
-        $this->actor = $data['actor'];
-        $this->fio_address = $data['fio_address'];
-        $this->fio_public_key = $data['fio_public_key'];
-        $this->last_login = $data['last_login'];
-        $this->last_login_ip = $data['last_login_ip'];
-        $this->auto_play = $data['auto_play'];
-        $this->sessions = $data['sessions'];
-        $this->fio_addresses = $data['fio_addresses'];
-        $this->types = $data['types'];
-    }
-    function getUserFilename() {
-        $file_name = "./user_data/" . $this->actor . ".txt"; // TODO: change this to a non-web accessible folder
-        return $file_name;
+        foreach (get_object_vars($this) as $key => $value) {
+            if ($key == "sessions") {
+                $this->sessions = array();
+                foreach ($data["sessions"] as $i => $session) {
+                    $this->sessions[] = new Session(
+                        $session["login_time"],
+                        $session["login_ip"],
+                        $session["fio_address"],
+                        $session["session_start_time"],
+                        $session["completed"]
+                    );
+                }
+            } else {
+                if (array_key_exists($key, $data)) {
+                    $this->$key = $data[$key];
+                }
+            }
+        }
     }
     function save() {
-        file_put_contents($this->getUserFilename(),serialize($this->getData()));
+        $userData = get_object_vars($this);
+        unset($userData["dataDir"]);
+        unset($userData["userStore"]);
+        if ($userData["_id"]) {
+            $this->userStore->update($userData);
+        } else {
+            unset($userData["_id"]);
+            $user = $this->userStore->insert($userData);
+            $this->_id = $user["_id"];
+        }
     }
     function read() {
-        $seralized_data = @file_get_contents($this->getUserFilename());
-        if ($seralized_data) {
-            $this->loadData(unserialize($seralized_data));
+        $user = $this->userStore->findOneBy(["actor", "=", $this->actor]);
+        if ($user) {
+            $this->loadData($user);
         }
-        return ($seralized_data);
+        return ($user);
     }
     function getFIOPublicKey($client) {
         if ($this->fio_public_key != "") {

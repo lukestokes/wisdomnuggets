@@ -3,91 +3,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use xtype\Fio\Client;
 $client = new Client('http://fio.greymass.com');
 include "header.php";
-
-$type = "";
-$category = "";
-$type_category = "";
-if (isset($_GET["type_category"]) && $_GET["type_category"] != "") {
-    $type_category = strip_tags($_GET["type_category"]);
-    $values = explode("|", $type_category);
-    $type = $values[0];
-    $category = $values[1];
-}
-$auto_play = 0;
-if (isset($_GET["auto_play"]) && $_GET["auto_play"] != "") {
-    $auto_play = strip_tags($_GET["auto_play"]);
-    $_SESSION["auto_play"] = $auto_play;
-} else {
-  if (isset($_SESSION["auto_play"])) {
-    $auto_play = $_SESSION["auto_play"];
-  }
-}
-if (isset($_GET["customized"]) && $_GET["customized"] == "true") {
-  foreach ($Wisdom->chunks as $chunk) {
-    $chunk->included = false;
-    if (isset($_GET["include_chunk_" . $chunk->type]) && $_GET["include_chunk_" . $chunk->type] == "on") {
-      $chunk->included = true;
-    }
-  }
-}
-
-if (!isset($_SESSION["completed"])) {
-  $_SESSION["completed"] = 0;
-}
-
-if (isset($_SESSION["previous_answers"]) && isset($_GET["previous_answers"])) {
-  if ($_SESSION["previous_answers"] == $_GET["previous_answers"] && $_GET["previous_answers"] != "") {
-    $_SESSION["completed"]++;
-  }
-}
-
-$Nugget = $Wisdom->getRandom($type, $category);
-$display = (($Nugget->title == "") ? $Nugget->category : $Nugget->category . ": " . $Nugget->title);
-$grouped_words = $Nugget->createWordGroup();
-
-$color_schemes = array(
-    0 => array(
-        '233d4d',
-        'fe7f2d',
-        'fcca46',
-        'a1c181',
-        '619b8a',
-    ),
-    1 => array(
-        '264653',
-        '2A9D8F',
-        'E9C46A',
-        'F4A261',
-        'F4A261',
-    ),
-    2 => array(
-        'd64045',
-        '87ccb9',
-        '9ed8db',
-        '467599',
-        '1d3354',
-    ),
-    3 => array(
-        'd7263d',
-        'f46036',
-        '2e294e',
-        '1b998b',
-        'c5d86d',
-    ),
-    4 => array(
-        '70d6ff',
-        'ff70a6',
-        'ff9770',
-        'ffd670',
-        'abba56',
-    ),
-);
-
-$key = array_rand($color_schemes);
-$color_scheme = $color_schemes[$key];
-
 ?>
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -156,7 +72,7 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
     <div class="container-fluid">
       <div class="row m-3">
         <h4><?php print $title; ?></h4>
-        <p>Click the grouped words in the correct order to complete the phrase. <a data-toggle="collapse" href="#whyText">Why?</a> <?php print $login_status_string; ?></p>
+        <div>Click the grouped words in the correct order to complete the phrase. <a data-toggle="collapse" href="#whyText">Why?</a> <?php print $login_status_string; ?></div>
         <div class="collapse" id="whyText">
           <div class="alert alert-primary" role="alert"><?php print $description; ?></div>
         </div>
@@ -211,33 +127,41 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
               <div class="form-group">
                 <button type="submit" class="btn btn-primary">Play Again!</button>
               </div>
-              <div class="form-floating">
-                <select name="auto_play" class="form-select" id="auto_play">
-                  <?php $Wisdom->printAutoplayOptions($auto_play); ?>
-                </select>
-                <label for="auto_play">Autoplay after:</label>
+              <?php if (isset($_SESSION['username'])) { ?>
+              <div>
+                [<a data-toggle="collapse" href="#settings">settings</a>]
               </div>
-              <div class="form-floating">
-                <select name="type_category" class="form-select" id="type_category">
-                  <?php $Wisdom->printTypeCategoryOptions($type_category); ?>
-                </select>
-                <label for="type_category">Filter for:</label>
+              <div class="collapse" id="settings">
+              <?php } ?>
+                <div class="form-floating">
+                  <select name="auto_play" class="form-select" id="auto_play">
+                    <?php $Wisdom->printAutoplayOptions($auto_play); ?>
+                  </select>
+                  <label for="auto_play">Autoplay after:</label>
+                </div>
+                <div class="form-floating">
+                  <select name="type_category" class="form-select" id="type_category">
+                    <?php $Wisdom->printTypeCategoryOptions($type_category); ?>
+                  </select>
+                  <label for="type_category">Filter for:</label>
+                </div>
+                <div class="form-group">
+                  <p class="card-title">Include: </p>
+                  <?php $Wisdom->printChunkCheckboxes(); ?>
+                </div>
+              <?php if (isset($_SESSION['username'])) { ?>
               </div>
-              <div class="form-group">
-                <p class="card-title">Include: </p>
-                <?php $Wisdom->printChunkCheckboxes(); ?>
-              </div>
+              <?php } ?>
               <input type="hidden" id="previous_answers" name="previous_answers" value="">
             </form>
           </div>
         </div>
-        <p><sub>Code lives <a href="https://github.com/lukestokes/wisdomnuggets">here</a>. <a href="https://sri-yantra.lukestokes.info/">Sri Yantra</a>, anyone?</sub></p>
 
-        <p>You've completed <?php print $_SESSION["completed"]; ?> this session. <a href="?save">Save stats</a>. <a href="?viewStats">View stats</a>.</p>
+        <p>You've completed <?php print $_SESSION["completed"]; ?> this session. [<a href="?save">save stats</a>] [<a href="?viewStats">view stats</a>]</p>
         <?php
         if (isset($_GET["viewStats"]) && isset($_SESSION['username'])) {
           print "<p>";
-          $user = new User($_SESSION['username'],$_SESSION['fio_address']);
+          $user = new User($_SESSION['username']);
           $user->read();
           $user->showSessions();
           print "</p>";
@@ -256,6 +180,9 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
         </script>
         <!-- Your share button code -->
         <div class="fb-share-button" data-href="https://wisdomnuggets.lukestokes.info/" data-layout="button_count"></div>
+
+        <p><sub>Code lives <a href="https://github.com/lukestokes/wisdomnuggets">here</a>. <a href="https://sri-yantra.lukestokes.info/">Sri Yantra</a>, anyone?</sub></p>
+
       </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

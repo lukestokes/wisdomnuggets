@@ -3,19 +3,21 @@
 class Session {
     public $login_time;
     public $login_ip;
+    public $fio_address;
     public $session_start_time;
     public $completed;
     
     function __construct($User,$session_start_time,$completed) {
         $this->login_time = $User->last_login;
         $this->login_ip = $User->last_login_ip;
+        $this->fio_address = $User->fio_address;
         $this->session_start_time = $session_start_time;
         $this->completed = $completed;
     }
 
     function print($last_login) {
         if ($last_login != $this->login_time) {            
-            print "<b>Login " . date("Y-m-d H:m:s",$this->login_time) . " from " . $this->login_ip . "</b><br />";
+            print "<b>" . $this->fio_address . " " . date("Y-m-d H:m:s",$this->login_time) . " from " . $this->login_ip . "</b><br />";
         }
         print date("Y-m-d H:m:s",$this->session_start_time) . ": Completed " . $this->completed . "<br />";
     }
@@ -23,22 +25,23 @@ class Session {
 
 class User {
     public $actor;
-    public $fio_address;
+    public $fio_address = "";
     public $fio_public_key;
     public $last_login;
     public $last_login_ip;
     public $auto_play;
     public $sessions = array();
     public $fio_addresses = array();
+    public $types = array();
 
-    function __construct($actor, $fio_address = "") {
+    function __construct($actor) {
         $this->actor = $actor;
-        $this->fio_address = $fio_address;
     }
 
-    function saveSession($session_start_time, $completed, $auto_play) {
+    function saveSession($session_start_time, $completed, $auto_play, $types) {
         $this->auto_play = $auto_play;
-        $this->sessions[] = new Session($this, $session_start_time,$completed);
+        $this->types = $types;
+        $this->sessions[] = new Session($this, $session_start_time, $completed);
         $this->save();
     }
     function showSessions() {
@@ -57,6 +60,8 @@ class User {
             'last_login_ip' => $this->last_login_ip,
             'auto_play' => $this->auto_play,
             'sessions' => $this->sessions,
+            'fio_addresses' => $this->fio_addresses,
+            'types' => $this->types,
         );
         return $data;
     }
@@ -68,9 +73,11 @@ class User {
         $this->last_login_ip = $data['last_login_ip'];
         $this->auto_play = $data['auto_play'];
         $this->sessions = $data['sessions'];
+        $this->fio_addresses = $data['fio_addresses'];
+        $this->types = $data['types'];
     }
     function getUserFilename() {
-        $file_name = "./user_data/" . $this->actor . "_" . md5($this->fio_address) . ".txt"; // change this to a non-web accessible folder
+        $file_name = "./user_data/" . $this->actor . ".txt"; // TODO: change this to a non-web accessible folder
         return $file_name;
     }
     function save() {
@@ -81,9 +88,6 @@ class User {
         if ($seralized_data) {
             $this->loadData(unserialize($seralized_data));
         }
-    }
-    function userExists() {
-        $seralized_data = @file_get_contents($this->getUserFilename());
         return ($seralized_data);
     }
     function getFIOPublicKey($client) {
@@ -137,8 +141,27 @@ class User {
         return in_array($fio_address, $this->getFIOAddresses($client));
     }
 
-}
+    function getFIOAddressSelectionForm() {
+        $form_string = "";
+        $form_string .= '
+            <form method="GET" id="fio_address_selection_form">
+            <input type="hidden" id="next_action" name="next_action" value="use_fio_address">
+        ';
+        foreach ($this->fio_addresses as $key => $fio_address) {
+            $form_string .= '
+            <div class="form-check">
+            <input class="form-check-input" name="user_fio_address" id="user_fio_address_' . $key . '" type="radio" value="' . $fio_address . '">
+            <label class="form-check-label" for="user_fio_address_' . $key . '">' . $fio_address . '</label>
+            </div>';
+        }
+        $form_string .= '
+            <button type="submit" class="btn btn-primary mb-3">Use This Address</button>
+            </form>
+        ';
+        return $form_string;
+    }
 
+}
 
 class Nugget {
     public $type;
@@ -217,9 +240,19 @@ class Wisdom {
     }
 
     function setActiveChunks($types) {
-        foreach ($this->chunks as $chunk) {
-            $chunk->included = in_array($chunk->type, $types);
+        foreach ($this->chunks as $key => $chunk) {
+            $this->chunks[$key]->included = in_array($chunk->type, $types);
         }
+    }
+
+    function getTypesFromGet() {
+        $types = array();
+        foreach ($this->chunks as $chunk) {
+            if (isset($_GET["include_chunk_" . $chunk->type]) && $_GET["include_chunk_" . $chunk->type] == "on") {
+                $types[] = $chunk->type;
+            }
+        }
+        return $types;
     }
 
     function getTypesAndCategories() {

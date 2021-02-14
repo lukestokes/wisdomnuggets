@@ -4,7 +4,7 @@ $Sayings = new Chunk("sayings","Confucius Quotes","https://www.quoteambition.com
 
 $category = "Sayings";
 
-$Sayings->addNugget($category, "The man who says he can, and the man who says he can not… Are both correct.");
+$Sayings->addNugget($category, "The man who says he can, and the man who says he can not... Are both correct.");
 $Sayings->addNugget($category, "Your life is what your thoughts make it.");
 $Sayings->addNugget($category, "Real knowledge is to know the extent of one's ignorance.");
 $Sayings->addNugget($category, "The man who asks a question is a fool for a minute, the man who does not ask is a fool for life.");
@@ -72,7 +72,7 @@ $Sayings->addNugget($category, "It does not matter how slowly you go as long as 
 $Sayings->addNugget($category, "Virtue is not left to stand alone. He who practices it will have neighbors.");
 $Sayings->addNugget($category, "Better a diamond with a flaw than a pebble without.");
 $Sayings->addNugget($category, "The superior man does not, even for the space of a single meal, act contrary to virtue. In moments of haste, he cleaves to it. In seasons of danger, he cleaves to it.");
-$Sayings->addNugget($category, "The will to win, the desire to succeed, the urge to reach your full potential… these are the keys that will unlock the door to personal excellence.");
+$Sayings->addNugget($category, "The will to win, the desire to succeed, the urge to reach your full potential... these are the keys that will unlock the door to personal excellence.");
 $Sayings->addNugget($category, "Go before the people with your example, and be laborious in their affairs.");
 $Sayings->addNugget($category, "When we see persons of worth, we should think of equaling them; when we see persons of a contrary character, we should turn inwards and examine ourselves.");
 $Sayings->addNugget($category, "If we don't know life, how can we know death?");

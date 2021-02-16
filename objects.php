@@ -1,5 +1,159 @@
 <?php
 
+function br() { return (PHP_SAPI === 'cli' ? "\n" : "<br />"); }
+
+class FaucetPayment {
+    public $_id;
+    public $time;
+    public $status;
+    public $note;
+    public $user_id;
+    public $actor;
+    public $fio_address;
+    public $payee_public_key;
+    public $amount;
+    public $cmd;
+    public $transaction_id;
+    public $transaction_time;
+
+    public $dataDir;
+    public $dataStore;
+
+    function __construct() {
+        $this->dataDir = __DIR__ . "/user_data";
+        $this->dataStore = new \SleekDB\Store("faucet_payment", $this->dataDir);
+    }
+
+    function save() {
+        $faucetPaymentData = get_object_vars($this);
+        unset($faucetPaymentData["dataDir"]);
+        unset($faucetPaymentData["dataStore"]);
+        if ($faucetPaymentData["_id"]) {
+            $this->dataStore->update($faucetPaymentData);
+        } else {
+            unset($faucetPaymentData["_id"]);
+            $faucet_payment = $this->dataStore->insert($faucetPaymentData);
+            $this->_id = $faucet_payment["_id"];
+        }
+    }
+
+    function loadData($data) {
+        foreach (get_object_vars($this) as $key => $value) {
+            if (array_key_exists($key, $data)) {
+                $this->$key = $data[$key];
+            }
+        }
+    }
+
+    function read() {
+        $user = $this->dataStore->findById($this->_id);
+        if ($user) {
+            $this->loadData($user);
+        }
+        return ($user);
+    }
+
+    function print() {
+        print date("Y-m-d H:m:s",$this->time) . " (";
+        if ($this->status == "Paid") {
+            if (PHP_SAPI !== 'cli') {
+                print '<a href="https://fio.bloks.io/transaction/' . $this->transaction_id . '">' . $this->status . '</a>';
+            }
+        } else {
+            print $this->status;
+        }
+        if ($this->note) {
+            print ": " . $this->note;
+        }
+        print "): " . $this->fio_address . " got " . $this->amount . " FIO" . br();
+    }
+
+}
+
+class Faucet {
+    public $max_to_give = 10;
+    public $min_to_give = 1;
+    public $client;
+    public $fio_address = "faucet@stokes";
+    public $actor = "vuuchahodjvm";
+    public $fio_public_key = "FIO64rU7M6jtc6QcgXFdqERrB99iv2sXK9WRR7Dg2JwezvfXStQMH";
+
+    function __construct($client) {
+        $this->client = $client;
+    }
+
+    function getTransferFee() {
+        $fee = 0;
+        try {
+            $params = array(
+                "end_point" => "transfer_tokens_pub_key",
+                "fio_address" => "faucet@stokes"
+            );
+            $response = $this->client->post('/v1/chain/get_fee', [
+                GuzzleHttp\RequestOptions::JSON => $params
+            ]);
+            $result = json_decode($response->getBody());
+            $fee = $result->fee;
+        } catch(\Exception $e) { }
+        return $fee;
+    }
+
+    function distribute($user_id, $actor, $fio_address, $fio_public_key) {
+        $amount = random_int($this->min_to_give * 100,$this->max_to_give * 100);
+        if ($amount == 666) { // people are superstitious
+            $amount = random_int($this->min_to_give * 100,$this->max_to_give * 100);
+        }
+        $amount /= 100;
+
+// TEMP:
+
+$amount = 0.1;
+
+        $amount_in_SUF = $amount * 1000000000;
+        $fee = $this->getTransferFee();
+        $data = '{
+          "payee_public_key": "' . $fio_public_key . '",
+          "amount": "' . $amount_in_SUF . '",
+          "max_fee": ' . $fee . ',
+          "tpid": "' . $this->fio_address . '",
+          "actor": "' . $this->actor . '"
+        }';
+        $cmd = "push action fio.token trnsfiopubky '" . $data . "' -p " . $this->actor . "@active";
+        $FaucetPayment = new FaucetPayment();
+        $FaucetPayment->user_id = $user_id;
+        $FaucetPayment->actor = $actor;
+        $FaucetPayment->time = time();
+        $FaucetPayment->fio_address = $fio_address;
+        $FaucetPayment->amount = $amount;
+        $FaucetPayment->payee_public_key = $fio_public_key;
+        $FaucetPayment->cmd = $cmd;
+        $FaucetPayment->status = "Pending";
+        $FaucetPayment->save();
+        return $FaucetPayment;
+    }
+
+    function getPayments($criteria = null, $limit = null) {
+        $FaucetPayment = new FaucetPayment();
+        if (is_null($criteria)) {
+            $criteria = ["fio_address", "!=", ""];
+        }
+        $faucet_payments = $FaucetPayment->dataStore->findBy($criteria, ["time" => "desc"], $limit);
+        $FaucetPayments = array();
+        foreach ($faucet_payments as $key => $faucet_payment) {
+            $Payment = new FaucetPayment();
+            $Payment->loadData($faucet_payment);
+            $FaucetPayments[] = $Payment;
+        }
+        return $FaucetPayments;
+    }
+
+    function printPayments($FaucetPayments) {
+        foreach ($FaucetPayments as $key => $FaucetPayment) {
+            $FaucetPayment->print();
+        }
+    }
+}
+
 class Session {
     public $login_time;
     public $login_ip;
@@ -17,9 +171,9 @@ class Session {
 
     function print($last_login) {
         if ($last_login != $this->login_time) {            
-            print "<b>" . $this->fio_address . " " . date("Y-m-d H:m:s",$this->login_time) . " from " . $this->login_ip . "</b><br />";
+            print "<b>" . $this->fio_address . " " . date("Y-m-d H:m:s",$this->login_time) . " from " . $this->login_ip . "</b>" . br();
         }
-        print date("Y-m-d H:m:s",$this->session_start_time) . ": Completed " . $this->completed . "<br />";
+        print date("Y-m-d H:m:s",$this->session_start_time) . ": Completed " . $this->completed . br();
     }
 }
 
@@ -37,12 +191,16 @@ class User {
 
     // exclude from object properties
     public $dataDir;
-    public $userStore;
+    public $dataStore;
 
     function __construct($actor) {
         $this->actor = $actor;
         $this->dataDir = __DIR__ . "/user_data";
-        $this->userStore = new \SleekDB\Store("users", $this->dataDir);
+        $this->dataStore = new \SleekDB\Store("users", $this->dataDir);
+    }
+
+    function print() {
+        print $this->_id . ": " . $this->actor . " " . $this->fio_address . br();
     }
 
     function saveSession($session_start_time, $completed, $auto_play, $types) {
@@ -87,17 +245,21 @@ class User {
     function save() {
         $userData = get_object_vars($this);
         unset($userData["dataDir"]);
-        unset($userData["userStore"]);
+        unset($userData["dataStore"]);
         if ($userData["_id"]) {
-            $this->userStore->update($userData);
+            $this->dataStore->update($userData);
         } else {
             unset($userData["_id"]);
-            $user = $this->userStore->insert($userData);
+            $user = $this->dataStore->insert($userData);
             $this->_id = $user["_id"];
         }
     }
     function read() {
-        $user = $this->userStore->findOneBy(["actor", "=", $this->actor]);
+        if ($this->_id) {
+            $user = $this->dataStore->findById($this->_id);
+        } else {
+            $user = $this->dataStore->findOneBy(["actor", "=", $this->actor]);
+        }
         if ($user) {
             $this->loadData($user);
         }

@@ -162,14 +162,27 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
 
         <p>You've completed <?php print $_SESSION["completed"]; ?> this session. [<a href="?save">save stats</a>] [<a href="?viewStats">view stats</a>]</p>
         <?php
-        if (isset($_GET["viewStats"]) && isset($_SESSION['username'])) {
+        if (isset($_SESSION['username'])) {
+          if (isset($_GET["viewStats"])) {
+            print "<p>";
+            $user = new User($_SESSION['username']);
+            $user->read();
+            $user->showSessions();
+            print "</p>";
+          }
+          $Faucet = new Faucet($client);
+          print "<h3>Your Recent Faucet Rewards</h3>";
+          $payments = $Faucet->getPayments(["actor","=",$_SESSION['username']]);
           print "<p>";
-          $user = new User($_SESSION['username']);
-          $user->read();
-          $user->showSessions();
+          $Faucet->printPayments($payments);
           print "</p>";
-        }
 
+        }
+        print "<h3>Recent Faucet Rewards</h3>";
+        $all_payments = $Faucet->getPayments(["status","=","Paid"]);
+        print "<p>";
+        $Faucet->printPayments($all_payments);
+        print "</p>";
         ?>
         <script>
         // load facebook share features

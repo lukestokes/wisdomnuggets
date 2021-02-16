@@ -71,13 +71,25 @@ if (!isset($_SESSION["completed"])) {
   $_SESSION["completed"] = 0;
 }
 
+$login_status_string = "";
+
 if (isset($_SESSION["previous_answers"]) && isset($_GET["previous_answers"])) {
   if ($_SESSION["previous_answers"] == $_GET["previous_answers"] && $_GET["previous_answers"] != "") {
     $_SESSION["completed"]++;
+    if (isset($_SESSION['username'])) {
+
+        // TODO: do this based on some randomization...
+
+        $user = new User($_SESSION['username']);
+        $user_exists = $user->read();
+        if ($user_exists) {
+            $Faucet = new Faucet($client);
+            $FaucetPayment = $Faucet->distribute($user->_id, $user->actor, $user->fio_address, $user->fio_public_key);
+            $login_status_string .= '<div class="alert alert-success" role="alert"><b>Congratulations!</b><br />You won ' . $FaucetPayment->amount . ' FIO (pending approval).</div>';
+        }
+    }
   }
 }
-
-$login_status_string = "";
 
 if (isset($_GET["identity_proof"]) && $_GET["identity_proof"] != "") {
   $proof = json_decode($_GET["identity_proof"], true);

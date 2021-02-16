@@ -62,10 +62,11 @@ function my_exec($cmd, $input='') {
               );
 }
 
-$oldest = showPending();
-if ($oldest != -1) {
+function makePayment($selected) {
+    global $clio_path;
+    global $clio;
     print br();
-    $FaucetPayment = selectPayment($oldest);
+    $FaucetPayment = selectPayment($selected);
     $user = new User("");
     $user->_id = $FaucetPayment->user_id;
     $user->read();
@@ -104,11 +105,9 @@ if ($oldest != -1) {
         }
     }
     if ($input == "n") {
-        print "Would you like to reject this payment with a note (y/n)? ";
+        print "To reject this payment, enter a note (press enter to skip): ";
         $input = rtrim(fgets(STDIN));
-        if ($input == "y") {
-            print "Note: ";
-            $input = rtrim(fgets(STDIN));
+        if ($input != "") {
             $FaucetPayment->status = "Rejected";
             $FaucetPayment->note = $input;
             $FaucetPayment->save();
@@ -116,5 +115,11 @@ if ($oldest != -1) {
     }
 }
 
+
+$selected = showPending();
+while($selected != -1) {
+    makePayment($selected);
+    $selected = showPending();
+}
 
 ?>

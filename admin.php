@@ -8,7 +8,7 @@ if (php_sapi_name() != "cli") {
 }
 
 $clio_path = "/root/fio.ready/ubuntu_18/";
-$clio_path = "/Users/lukestokes/Documents/workspace/FIO/chain_files/fio.ready-master/";
+//$clio_path = "/Users/lukestokes/Documents/workspace/FIO/chain_files/fio.ready-master/";
 $clio = "clio --url https://fio.greymass.com ";
 
 print "Welcome to the Wisdom Nuggets Faucet Admin\n\n";

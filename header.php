@@ -2,7 +2,7 @@
 include "objects.php";
 include "wisdom_data.php";
 
-$title = "Wisdom Nuggets! Have Fun and Earn Crypto Programming Your Brain";
+$title = "Wisdom Nuggets! Have Fun and Win Crypto Programming Your Brain";
 $description = "Reality is the result of our actions initiated by our thoughts. Have fun playing a game to help you memorize key principles, maxims, logical fallacies, and more for clear thinking and success. To improve the world, start with yourself.";
 $image = "https://wisdomnuggets.lukestokes.info/images/sriyantra.png";
 $url = "https://wisdomnuggets.lukestokes.info/";

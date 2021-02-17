@@ -71,7 +71,7 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
           <?php if ($_SESSION["completed"] < 2 || !isset($_SESSION['username'])) { ?>Click the grouped words in the correct order to complete the phrase. <a data-toggle="collapse" href="#whyText">Why?</a><?php } ?> <?php print $login_status_string; ?>
         </div>
         <div class="collapse" id="whyText">
-          <div class="alert alert-primary" role="alert"><?php print $description . ' You can also earn some cryptocurrency for playing if you ' . $onboarding_pitch; ?></div>
+          <div class="alert alert-primary" role="alert"><?php print $description . ' You can also win some cryptocurrency for playing if you ' . $onboarding_pitch; ?></div>
         </div>
         <div class="card">
           <div class="card-body">
@@ -178,7 +178,7 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
         $Faucet->printPayments($all_payments);
         print "</p>";
         ?>
-        <a href="https://pixabay.com/vectors/owl-reading-book-bird-study-4783407/"><img src="images/owl-4783407_640.png" /></a>
+        <a href="https://pixabay.com/vectors/owl-reading-book-bird-study-4783407/"><img src="images/owl-4783407_640.png" class="img-fluid"/></a>
         <script>
         // load facebook share features
         (function(d, s, id) {
@@ -188,9 +188,33 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
         js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
         fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
+
+        // load Twiter share features
+        window.twttr = (function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0],
+            t = window.twttr || {};
+          if (d.getElementById(id)) return t;
+          js = d.createElement(s);
+          js.id = id;
+          js.src = "https://platform.twitter.com/widgets.js";
+          fjs.parentNode.insertBefore(js, fjs);
+
+          t._e = [];
+          t.ready = function(f) {
+            t._e.push(f);
+          };
+          return t;
+        }(document, "script", "twitter-wjs"));
         </script>
-        <!-- Your share button code -->
-        <div class="fb-share-button" data-href="https://wisdomnuggets.lukestokes.info/" data-layout="button_count"></div>
+        <div class="row align-items-center">
+          <!-- Your share button code -->
+          <div class="col">
+            <div class="fb-share-button" data-href="https://wisdomnuggets.lukestokes.info/" data-layout="button_count"></div>
+          </div>
+          <div class="col">
+            <a class="twitter-hashtag-button" href="https://twitter.com/intent/tweet?" data-hashtags="wisdomnuggets" data-text='Come play with some wisdom nuggets! Have fun and win crypto programming your brain @WiseFIOFaucet' data-url="https://wisdomnuggets.lukestokes.info" target="_blank">Tweet</a>
+          </div>
+        </div>
 
         <p><sub>You can view the code for this and <a href="https://github.com/lukestokes/wisdomnuggets">find out more here</a>. Or meditate with a <a href="https://sri-yantra.lukestokes.info/">Sri Yantra</a></sub></p>
 
@@ -215,7 +239,7 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
     </script>
     <script src="https://unpkg.com/anchor-link@3"></script>
     <script src="https://unpkg.com/anchor-link-browser-transport@3"></script>
-    <script src="js/wisdom_nuggets.js?v=2"></script>
+    <script src="js/wisdom_nuggets.js?v=3"></script>
     <script>
     // app identifier, should be set to the eosio contract account if applicable
     const identifier = 'wisdomnuggets'

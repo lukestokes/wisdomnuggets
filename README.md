@@ -1,6 +1,6 @@
 # Wisdom Nuggets
 
-## Wisdom Nuggets! Have Fun and Earn Crypto Programming Your Brain
+## Wisdom Nuggets! Have Fun and Win Crypto Programming Your Brain
 
 Playing around with interactive games for increasing wisdom.
 

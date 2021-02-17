@@ -13,6 +13,8 @@ This is my own personal project using my own time and funds. If you want to dona
 
 ### Ideas for improvement:
 
+* Create a way to link directly to a wisdom quote.
+* When tweeting out a favorite quote, include a link to the specific quote.
 * Add instructions for anyone to include pull requests for any chunk of wisdom nuggets they want to memorize.
 * Keep track of correct answers (browser storage only or add a server-side database?)
 * Let the user tag nuggets which are hard to remember which increases the frequency they are shown

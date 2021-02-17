@@ -14,8 +14,7 @@ $clio = "clio --url https://fio.greymass.com ";
 
 print "Welcome to the Wisdom Nuggets Faucet Admin\n\n";
 
-function showPending() {
-    global $Faucet;
+function showPending($Faucet) {
     print "Pending Payments:" . br();
     $FaucetPayments = $Faucet->getPayments(["status","=","Pending"]);
     $oldest = -1;
@@ -30,7 +29,7 @@ function showPending() {
     return $oldest;
 }
 
-function selectPayment($oldest) {
+function selectPayment($Faucet, $oldest) {
     print "Which Payment Would you like to Process? (enter for oldest): ";
     $input = rtrim(fgets(STDIN));
     $fetch_id = $oldest;
@@ -43,9 +42,9 @@ function selectPayment($oldest) {
     if ($found) {
         return $FaucetPayment;
     }
-    $oldest = showPending();
+    $oldest = showPending($Faucet);
     if ($oldest != -1) {
-        selectPayment($oldest);
+        selectPayment($Faucet, $oldest);
     }
 }
 
@@ -61,11 +60,11 @@ function my_exec($cmd, $input='') {
               );
 }
 
-function makePayment($selected) {
+function makePayment($Faucet, $selected) {
     global $clio_path;
     global $clio;
     print br();
-    $FaucetPayment = selectPayment($selected);
+    $FaucetPayment = selectPayment($Faucet, $selected);
     $user = new User("");
     $user->_id = $FaucetPayment->user_id;
     $user->read();
@@ -117,10 +116,10 @@ function makePayment($selected) {
 }
 
 
-$selected = showPending();
+$selected = showPending($Faucet);
 while($selected != -1) {
-    makePayment($selected);
-    $selected = showPending();
+    makePayment($Faucet, $selected);
+    $selected = showPending($Faucet);
 }
 
 ?>

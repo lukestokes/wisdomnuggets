@@ -59,6 +59,8 @@ class FaucetPayment {
         if ($this->status == "Paid") {
             if (PHP_SAPI !== 'cli') {
                 print '<a href="https://fio.bloks.io/transaction/' . $this->transaction_id . '" target="_blank">' . $this->status . '</a>';
+            } else {
+                print $this->status;
             }
         } else {
             print $this->status;

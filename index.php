@@ -6,12 +6,6 @@ include "header.php";
 <!doctype html>
 <html lang="en">
   <head>
-    <?php
-      $title = "Wisdom Nuggets! Have Fun Programming Your Brain";
-      $description = "Reality is the result of our actions initiated by our thoughts. Have fun playing a game to help you memorize key principles, maxims, logical fallacies, and more for clear thinking and success. To improve the world, start with yourself.";
-      $image = "https://wisdomnuggets.lukestokes.info/images/sriyantra.png";
-      $url = "https://wisdomnuggets.lukestokes.info/";
-    ?>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -77,7 +71,7 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
           <?php if ($_SESSION["completed"] < 2 || !isset($_SESSION['username'])) { ?>Click the grouped words in the correct order to complete the phrase. <a data-toggle="collapse" href="#whyText">Why?</a><?php } ?> <?php print $login_status_string; ?>
         </div>
         <div class="collapse" id="whyText">
-          <div class="alert alert-primary" role="alert"><?php print $description; ?></div>
+          <div class="alert alert-primary" role="alert"><?php print $description . ' You can also earn some cryptocurrency for playing if you ' . $onboarding_pitch; ?></div>
         </div>
         <div class="card">
           <div class="card-body">
@@ -162,15 +156,29 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
 
         <p>You've completed <?php print $_SESSION["completed"]; ?> this session. [<a href="?save">save stats</a>] [<a href="?viewStats">view stats</a>]</p>
         <?php
-        if (isset($_GET["viewStats"]) && isset($_SESSION['username'])) {
+        $Faucet = new Faucet($client);
+        if (isset($_SESSION['username'])) {
+          if (isset($_GET["viewStats"])) {
+            print "<p>";
+            $user = new User($_SESSION['username']);
+            $user->read();
+            $user->showSessions();
+            print "</p>";
+          }
+          print "<h3>Your Recent Faucet Rewards</h3>";
+          $payments = $Faucet->getPayments(["actor","=",$_SESSION['username']]);
           print "<p>";
-          $user = new User($_SESSION['username']);
-          $user->read();
-          $user->showSessions();
+          $Faucet->printPayments($payments);
           print "</p>";
-        }
 
+        }
+        print "<h3>Recent Faucet Rewards</h3>";
+        $all_payments = $Faucet->getPayments(["status","=","Paid"]);
+        print "<p>";
+        $Faucet->printPayments($all_payments);
+        print "</p>";
         ?>
+        <a href="https://pixabay.com/vectors/owl-reading-book-bird-study-4783407/"><img src="images/owl-4783407_640.png" /></a>
         <script>
         // load facebook share features
         (function(d, s, id) {
@@ -184,7 +192,7 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
         <!-- Your share button code -->
         <div class="fb-share-button" data-href="https://wisdomnuggets.lukestokes.info/" data-layout="button_count"></div>
 
-        <p><sub>Code lives <a href="https://github.com/lukestokes/wisdomnuggets">here</a>. <a href="https://sri-yantra.lukestokes.info/">Sri Yantra</a>, anyone?</sub></p>
+        <p><sub>You can view the code for this and <a href="https://github.com/lukestokes/wisdomnuggets">find out more here</a>. Or meditate with a <a href="https://sri-yantra.lukestokes.info/">Sri Yantra</a></sub></p>
 
       </div>
     </div>
@@ -207,7 +215,7 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
     </script>
     <script src="https://unpkg.com/anchor-link@3"></script>
     <script src="https://unpkg.com/anchor-link-browser-transport@3"></script>
-    <script src="js/wisdom_nuggets.js?v=1"></script>
+    <script src="js/wisdom_nuggets.js?v=2"></script>
     <script>
     // app identifier, should be set to the eosio contract account if applicable
     const identifier = 'wisdomnuggets'

@@ -22,13 +22,13 @@ function showAnswer(as_correct) {
         jQuery("#solution").addClass("alert-success");
         var solution = jQuery("#destination").html().trim();
         jQuery("#previous_answers").val(MD5(solution));
-        characters_to_share = 180;
+        characters_to_share = 215;
         share_text = jQuery("#solution").html().substring(0,characters_to_share);
-        share_text = share_text.replace("'","");
+        share_text = share_text.replace(/'/g,"");
         if (jQuery("#solution").html().length > characters_to_share) {
             share_text += "...";
         }
-        share_button = "<br /><a class=\"twitter-hashtag-button\" href=\"https://twitter.com/intent/tweet?\" data-hashtags=\"wisdomnuggets\" data-text='\"" + share_text + "\"' data-url=\"https://wisdomnuggets.lukestokes.info\" target=\"_blank\">Tweet</a>";
+        share_button = "<br /><a class=\"twitter-hashtag-button\" href=\"https://twitter.com/intent/tweet?\" data-hashtags=\"wisdomnuggets\" data-text='\"" + share_text + "\" @WiseFIOFaucet' data-url=\"https://wisdomnuggets.lukestokes.info\" target=\"_blank\">Tweet</a>";
         jQuery("#solution").append(share_button);
         document.getElementById('destination').innerHTML = "";
         document.getElementById('destination').appendChild(document.getElementById('solution'));

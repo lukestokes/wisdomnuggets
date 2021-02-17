@@ -2,6 +2,12 @@
 include "objects.php";
 include "wisdom_data.php";
 
+$title = "Wisdom Nuggets! Have Fun and Earn Crypto Programming Your Brain";
+$description = "Reality is the result of our actions initiated by our thoughts. Have fun playing a game to help you memorize key principles, maxims, logical fallacies, and more for clear thinking and success. To improve the world, start with yourself.";
+$image = "https://wisdomnuggets.lukestokes.info/images/sriyantra.png";
+$url = "https://wisdomnuggets.lukestokes.info/";
+$onboarding_pitch = '<a href="https://fioprotocol.io/free-fio-addresses/" target="_blank">get yourself a FIO Address</a> and import your private key into <a href="https://greymass.com/anchor/" target="_blank">Anchor Wallet by Greymass</a> to login.';
+
 // Begin the PHP session so we have a place to store the username
 session_start();
 
@@ -71,13 +77,35 @@ if (!isset($_SESSION["completed"])) {
   $_SESSION["completed"] = 0;
 }
 
+$login_status_string = "";
+
 if (isset($_SESSION["previous_answers"]) && isset($_GET["previous_answers"])) {
   if ($_SESSION["previous_answers"] == $_GET["previous_answers"] && $_GET["previous_answers"] != "") {
     $_SESSION["completed"]++;
+    $Faucet = new Faucet($client);
+    $result = $Faucet->isWinner($_SESSION["completed"]);
+    if (isset($_SESSION['username'])) {
+        $user = new User($_SESSION['username']);
+        $user_exists = $user->read();
+        if ($user_exists) {
+            if ($result["winner"]) {
+                $FaucetPayment = $Faucet->distribute($user->_id, $user->actor, $user->fio_address, $user->fio_public_key);
+                $login_status_string .= '<div class="alert alert-success" role="alert"><b>Congratulations!</b><br />You won ' . $FaucetPayment->amount . ' FIO (pending approval). Needed >' . $result["threshold"] . ', rolled a ' . $result["pick"] . '.</div>';
+                $user->saveSession($_SESSION["session_start"],$_SESSION["completed"],$_SESSION['auto_play'],$_SESSION["types"]);
+                $_SESSION["completed"] = 0;
+            } else {
+                $login_status_string .= '<div class="alert alert-info" role="alert">No FIO reward this time. Your random roll was ' . $result["pick"] . ', but you needed a number higher than ' . $result["threshold"] . '.</div>';
+            }
+        }
+    } else {
+        if ($result["winner"]) {
+            $login_status_string .= '<div class="alert alert-info" role="alert"><b>You Would Have Won!</b><br />You would have won ' . $Faucet->getRewardAmount() . ' <a href="https://www.coingecko.com/en/coins/fio-protocol" target="_blank">FIO Tokens</a> if you were logged in with your own FIO Address. To start winning, ' . $onboarding_pitch . ' Needed >' . $result["threshold"] . ', rolled a ' . $result["pick"] . '.</div>';
+        } else {
+            $login_status_string .= '<div class="alert alert-info" role="alert">No FIO reward this time. Your random roll was ' . $result["pick"] . ', but you needed a number higher than ' . $result["threshold"] . '.</div>';
+        }
+    }
   }
 }
-
-$login_status_string = "";
 
 if (isset($_GET["identity_proof"]) && $_GET["identity_proof"] != "") {
   $proof = json_decode($_GET["identity_proof"], true);

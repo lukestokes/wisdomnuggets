@@ -4,7 +4,7 @@ include "wisdom_data.php";
 
 $title = "Wisdom Nuggets! Have Fun and Win Crypto Programming Your Brain";
 $description = "Reality is the result of our actions initiated by our thoughts. Have fun playing a game to help you memorize key principles, maxims, logical fallacies, and more for clear thinking and success. To improve the world, start with yourself.";
-$image = "https://wisdomnuggets.lukestokes.info/images/sriyantra.png";
+$image = "https://wisdomnuggets.lukestokes.info/images/owl-4783407_640.png";
 $url = "https://wisdomnuggets.lukestokes.info/";
 $onboarding_pitch = '<a href="https://fioprotocol.io/free-fio-addresses/" target="_blank">get yourself a FIO Address</a> and import your private key into <a href="https://greymass.com/anchor/" target="_blank">Anchor Wallet by Greymass</a> to login.';
 

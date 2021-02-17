@@ -178,7 +178,7 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
         $Faucet->printPayments($all_payments);
         print "</p>";
         ?>
-        <a href="https://pixabay.com/vectors/owl-reading-book-bird-study-4783407/"><img src="images/owl-4783407_640.png" class="img-fluid"/></a>
+        <a href="https://pixabay.com/vectors/owl-reading-book-bird-study-4783407/"><img src="<?php print $image; ?>" class="img-fluid"/></a>
         <script>
         // load facebook share features
         (function(d, s, id) {

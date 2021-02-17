@@ -166,14 +166,14 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
             print "</p>";
           }
           print "<h3>Your Recent Faucet Rewards</h3>";
-          $payments = $Faucet->getPayments(["actor","=",$_SESSION['username']]);
+          $payments = $Faucet->getPayments(["actor","=",$_SESSION['username']], 10);
           print "<p>";
           $Faucet->printPayments($payments);
           print "</p>";
 
         }
         print "<h3>Recent Faucet Rewards</h3>";
-        $all_payments = $Faucet->getPayments(["status","=","Paid"]);
+        $all_payments = $Faucet->getPayments(["status","=","Paid"], 10);
         print "<p>";
         $Faucet->printPayments($all_payments);
         print "</p>";

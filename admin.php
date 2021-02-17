@@ -88,6 +88,7 @@ function makePayment($selected) {
             if ($parts[2] == "Locked") {
                 print "Please unlock your wallet:" . br();
                 print $clio_path . $clio . "wallet unlock" . br();
+                die();
             } else {
                 print "=================== ERROR ===================" . br();
                 print $results["stderr"] . br();
@@ -99,6 +100,7 @@ function makePayment($selected) {
                 $FaucetPayment->transaction_id = $parts[2];
                 $FaucetPayment->status = "Paid";
                 $FaucetPayment->save();
+                print "Success! https://fio.bloks.io/transaction/" . $parts[2] . br();
             } else {
                 var_dump($parts);
             }

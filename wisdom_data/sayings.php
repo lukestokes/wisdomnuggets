@@ -1,6 +1,6 @@
 <?php
 
-$Sayings = new Chunk("sayings","Confucius Quotes","https://www.quoteambition.com/confucius-quotes/");
+$Sayings = new Chunk("confucius","Confucius Quotes","https://www.quoteambition.com/confucius-quotes/");
 
 $category = "Sayings";
 

@@ -14,7 +14,6 @@ class FaucetPayment {
     public $amount;
     public $cmd;
     public $transaction_id;
-    public $transaction_time;
 
     public $dataDir;
     public $dataStore;
@@ -54,10 +53,12 @@ class FaucetPayment {
     }
 
     function print() {
-        print date("Y-m-d H:m:s",$this->time) . " (";
+        print date("Y-m-d H:m:s",$this->time);
+        print ": " . $this->fio_address . " got " . $this->amount . " FIO";
+        print " (";
         if ($this->status == "Paid") {
             if (PHP_SAPI !== 'cli') {
-                print '<a href="https://fio.bloks.io/transaction/' . $this->transaction_id . '">' . $this->status . '</a>';
+                print '<a href="https://fio.bloks.io/transaction/' . $this->transaction_id . '" target="_blank">' . $this->status . '</a>';
             }
         } else {
             print $this->status;
@@ -65,9 +66,8 @@ class FaucetPayment {
         if ($this->note) {
             print ": " . $this->note;
         }
-        print "): " . $this->fio_address . " got " . $this->amount . " FIO" . br();
+        print ")" . br();
     }
-
 }
 
 class Faucet {
@@ -98,17 +98,31 @@ class Faucet {
         return $fee;
     }
 
-    function distribute($user_id, $actor, $fio_address, $fio_public_key) {
+    function isWinner($completed) {
+        // pick a number between 1 and 1000
+        $pick = random_int(1, 1000);
+        $threshold = 900; // 1 out of 10 by default
+        $threshold -= ($completed * random_int(1,5));
+        $winner = ($pick > $threshold);
+        $result = array(
+            "winner" => $winner,
+            "pick" => $pick,
+            "threshold" => $threshold,
+        );
+        return $result;
+    }
+
+    function getRewardAmount() {
         $amount = random_int($this->min_to_give * 100,$this->max_to_give * 100);
         if ($amount == 666) { // people are superstitious
             $amount = random_int($this->min_to_give * 100,$this->max_to_give * 100);
         }
         $amount /= 100;
+        return $amount;
+    }
 
-// TEMP:
-
-$amount = 0.1;
-
+    function distribute($user_id, $actor, $fio_address, $fio_public_key) {
+        $amount = $this->getRewardAmount();
         $amount_in_SUF = $amount * 1000000000;
         $fee = $this->getTransferFee();
         $data = '{

@@ -156,7 +156,6 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
 
         <p>You've completed <?php print $_SESSION["completed"]; ?> this session. [<a href="?save">save stats</a>] [<a href="?viewStats">view stats</a>]</p>
         <?php
-        $Faucet = new Faucet($client);
         if (isset($_SESSION['username'])) {
           if (isset($_GET["viewStats"])) {
             print "<p>";
@@ -177,6 +176,7 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
         print "<p>";
         $Faucet->printPayments($all_payments);
         print "</p>";
+        print "<h3>Total Rewards Distributed: " . $Faucet->totalDistributed() . " FIO</h3>";
         ?>
         <a href="https://pixabay.com/vectors/owl-reading-book-bird-study-4783407/"><img src="<?php print $image; ?>" class="img-fluid"/></a>
         <script>

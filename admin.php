@@ -13,8 +13,6 @@ $clio = "clio --url https://fio.greymass.com ";
 
 print "Welcome to the Wisdom Nuggets Faucet Admin\n\n";
 
-$Faucet = new Faucet($client);
-
 function showPending() {
     global $Faucet;
     print "Pending Payments:" . br();

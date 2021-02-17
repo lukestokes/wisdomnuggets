@@ -78,8 +78,15 @@ class Faucet {
     public $actor = "vuuchahodjvm";
     public $fio_public_key = "FIO64rU7M6jtc6QcgXFdqERrB99iv2sXK9WRR7Dg2JwezvfXStQMH";
 
+    public $total_distributed = 0;
+
+    public $dataDir;
+    public $dataStore;
+
     function __construct($client) {
         $this->client = $client;
+        $this->dataDir = __DIR__ . "/user_data";
+        $this->dataStore = new \SleekDB\Store("faucet_stats", $this->dataDir);
     }
 
     function getTransferFee() {
@@ -143,6 +150,12 @@ class Faucet {
         $FaucetPayment->cmd = $cmd;
         $FaucetPayment->status = "Pending";
         $FaucetPayment->save();
+
+        $stats = $this->dataStore->findById(1);
+        $stats["total_distributed"] += $amount;
+        $this->total_distributed = $stats["total_distributed"];
+        $this->dataStore->update($stats);
+
         return $FaucetPayment;
     }
 
@@ -165,6 +178,28 @@ class Faucet {
         foreach ($FaucetPayments as $key => $FaucetPayment) {
             $FaucetPayment->print();
         }
+    }
+
+    function totalDistributed() {
+        if ($this->total_distributed) {
+            return $this->total_distributed;
+        }
+        try {
+            $stats = $this->dataStore->findById(1);
+            $this->total_distributed = $stats["total_distributed"];
+            if ($this->total_distributed) {
+                return $this->total_distributed;
+            }
+        } catch (Exception $e) {
+            // no stats yet...
+        }
+        $FaucetPayments = $this->getPayments(["status","=","Paid"]);
+        foreach ($FaucetPayments as $FaucetPayment) {
+            $this->total_distributed += $FaucetPayment->amount;
+        }
+        $stats = array("total_distributed" => $this->total_distributed);
+        $this->dataStore->insert($stats);
+        return $this->total_distributed;
     }
 }
 

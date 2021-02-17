@@ -2,6 +2,7 @@
 require_once __DIR__ . '/vendor/autoload.php';
 $client = new GuzzleHttp\Client(['base_uri' => 'http://fio.greymass.com']);
 include "objects.php";
+$Faucet = new Faucet($client);
 
 if (php_sapi_name() != "cli") {
     die("Access Denied");

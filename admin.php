@@ -19,6 +19,9 @@ if (isset($argv[1])) {
     if ($argv[1] == "users") {
         $show = "users";
     }
+    if ($argv[1] == "payments") {
+        $show = "payments";
+    }
 }
 $id = null;
 if (isset($argv[2])) {
@@ -44,6 +47,14 @@ function printUsers($id = null) {
     }
 }
 
+function showAll($Faucet) {
+    print "All Payments:" . br();
+    $FaucetPayments = $Faucet->getPayments(["status","!=","Rejected"]);
+    foreach ($FaucetPayments as $key => $FaucetPayment) {
+        print $FaucetPayment->_id . ": ";
+        $FaucetPayment->print();
+    }
+}
 
 function showPending($Faucet) {
     print "Pending Payments:" . br();
@@ -162,6 +173,9 @@ if (is_null($show)) {
 } else {
     if ($show == "users") {
         printUsers($id);
+    }
+    if ($show == "payments") {
+        showAll($Faucet);
     }
 }
 

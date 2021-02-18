@@ -210,13 +210,15 @@ class Session {
     public $login_ip;
     public $fio_address;
     public $session_start_time;
+    public $session_end_time;
     public $completed;
     
-    function __construct($login_time,$login_ip,$fio_address,$session_start_time,$completed) {
+    function __construct($login_time,$login_ip,$fio_address,$session_start_time,$session_end_time,$completed) {
         $this->login_time = $login_time;
         $this->login_ip = $login_ip;
         $this->fio_address = $fio_address;
         $this->session_start_time = $session_start_time;
+        $this->session_start_time = $session_end_time;
         $this->completed = $completed;
     }
 
@@ -224,7 +226,7 @@ class Session {
         if ($last_login != $this->login_time) {            
             print "<b>" . $this->fio_address . " " . date("Y-m-d H:i:s",$this->login_time) . " from " . $this->login_ip . "</b>" . br();
         }
-        print date("Y-m-d H:i:s",$this->session_start_time) . ": Completed " . $this->completed . br();
+        print date("Y-m-d H:i:s",$this->session_start_time) . " to " . date("Y-m-d H:i:s",$this->session_end_time) . ": Completed " . $this->completed . br();
     }
 }
 
@@ -262,6 +264,7 @@ class User {
             $this->last_login_ip,
             $this->fio_address,
             $session_start_time,
+            time(),
             $completed
         );
         $this->save();
@@ -278,11 +281,15 @@ class User {
             if ($key == "sessions") {
                 $this->sessions = array();
                 foreach ($data["sessions"] as $i => $session) {
+                    if (!isset($session["session_end_time"])) {
+                        $session["session_end_time"] = time();
+                    }
                     $this->sessions[] = new Session(
                         $session["login_time"],
                         $session["login_ip"],
                         $session["fio_address"],
                         $session["session_start_time"],
+                        $session["session_end_time"],
                         $session["completed"]
                     );
                 }

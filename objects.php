@@ -53,7 +53,7 @@ class FaucetPayment {
     }
 
     function print() {
-        print date("Y-m-d H:m:s",$this->time);
+        print date("Y-m-d H:i:s",$this->time);
         print ": " . $this->fio_address . " got " . $this->amount . " FIO";
         print " (";
         if ($this->status == "Paid") {
@@ -222,9 +222,9 @@ class Session {
 
     function print($last_login) {
         if ($last_login != $this->login_time) {            
-            print "<b>" . $this->fio_address . " " . date("Y-m-d H:m:s",$this->login_time) . " from " . $this->login_ip . "</b>" . br();
+            print "<b>" . $this->fio_address . " " . date("Y-m-d H:i:s",$this->login_time) . " from " . $this->login_ip . "</b>" . br();
         }
-        print date("Y-m-d H:m:s",$this->session_start_time) . ": Completed " . $this->completed . br();
+        print date("Y-m-d H:i:s",$this->session_start_time) . ": Completed " . $this->completed . br();
     }
 }
 

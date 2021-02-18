@@ -86,7 +86,7 @@ if (isset($_SESSION["previous_answers"]) && isset($_GET["previous_answers"])) {
     $_SESSION["completed"]++;
     $Faucet = new Faucet($client);
     $result = $Faucet->isWinner($_SESSION["completed"]);
-    if (isset($_SESSION['username'])) {
+    if (isset($_SESSION['username']) && $_SESSION['fio_address'] != "") {
         $user = new User($_SESSION['username']);
         $user_exists = $user->read();
         if ($user_exists) {
@@ -172,7 +172,7 @@ if (isset($_SESSION['username'])) {
     if ($_SESSION['fio_address'] != "") {
         $login_status_string .= $_SESSION['fio_address'] . ' [<a href="?next_action=change_fio_address">change</a>]';
     } else {
-        $login_status_string .= $_SESSION['username'];
+        $login_status_string .= $_SESSION['username'] . ' (<a href="https://fioprotocol.io/free-fio-addresses/" target="_blank">no FIO Address</a>)';
     }
     $login_status_string .= ' [<a href="?logout">log out</a>]';
 

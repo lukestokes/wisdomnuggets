@@ -130,6 +130,12 @@ function makePayment($Faucet, $selected) {
                 $FaucetPayment->status = "Paid";
                 $FaucetPayment->save();
                 print "Success! https://fio.bloks.io/transaction/" . $parts[2] . br();
+
+                $stats = $Faucet->dataStore->findById(1);
+                $stats["total_distributed"] += $FaucetPayment->amount;
+                $Faucet->total_distributed = $stats["total_distributed"];
+                $Faucet->dataStore->update($stats);
+
             } else {
                 var_dump($parts);
             }
@@ -158,6 +164,7 @@ if (is_null($show)) {
         printUsers($id);
     }
 }
+
 
 
 ?>

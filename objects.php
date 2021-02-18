@@ -152,12 +152,6 @@ class Faucet {
         $FaucetPayment->cmd = $cmd;
         $FaucetPayment->status = "Pending";
         $FaucetPayment->save();
-
-        $stats = $this->dataStore->findById(1);
-        $stats["total_distributed"] += $amount;
-        $this->total_distributed = $stats["total_distributed"];
-        $this->dataStore->update($stats);
-
         return $FaucetPayment;
     }
 

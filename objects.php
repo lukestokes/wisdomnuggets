@@ -316,6 +316,19 @@ class User {
         }
         return ($user);
     }
+    function getUsers($criteria = null, $limit = null) {
+        if (is_null($criteria)) {
+            $criteria = ["actor", "!=", ""];
+        }
+        $users = $this->dataStore->findBy($criteria, ["last_login" => "desc"], $limit);
+        $Users = array();
+        foreach ($users as $key => $user) {
+            $User = new User($user["actor"]);
+            $User->loadData($user);
+            $Users[] = $User;
+        }
+        return $Users;
+    }
     function getFIOPublicKey($client) {
         if ($this->fio_public_key != "") {
             return $this->fio_public_key;

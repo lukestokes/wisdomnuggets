@@ -14,6 +14,37 @@ $clio = "clio --url https://fio.greymass.com ";
 
 print "Welcome to the Wisdom Nuggets Faucet Admin\n\n";
 
+$show = null;
+if (isset($argv[1])) {
+    if ($argv[1] == "users") {
+        $show = "users";
+    }
+}
+$id = null;
+if (isset($argv[2])) {
+    if (is_numeric($argv[2])) {
+        $id = $argv[2];
+    }
+}
+
+
+function printUsers($id = null) {
+    $users = array();
+    $User = new User("");
+    if ($id) {
+        $User->_id = $id;
+        $User->read();
+        $users[] = $User;
+    } else {
+        $users = $User->getUsers();
+    }
+    foreach ($users as $user) {
+        $user->print();
+        $user->showSessions();
+    }
+}
+
+
 function showPending($Faucet) {
     print "Pending Payments:" . br();
     $FaucetPayments = $Faucet->getPayments(["status","=","Pending"]);
@@ -116,10 +147,17 @@ function makePayment($Faucet, $selected) {
 }
 
 
-$selected = showPending($Faucet);
-while($selected != -1) {
-    makePayment($Faucet, $selected);
+if (is_null($show)) {
     $selected = showPending($Faucet);
+    while($selected != -1) {
+        makePayment($Faucet, $selected);
+        $selected = showPending($Faucet);
+    }
+} else {
+    if ($show == "users") {
+        printUsers($id);
+    }
 }
+
 
 ?>

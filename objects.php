@@ -212,7 +212,7 @@ class Session {
         $this->login_ip = $login_ip;
         $this->fio_address = $fio_address;
         $this->session_start_time = $session_start_time;
-        $this->session_start_time = $session_end_time;
+        $this->session_end_time = $session_end_time;
         $this->completed = $completed;
     }
 

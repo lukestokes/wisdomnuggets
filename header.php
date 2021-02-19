@@ -8,7 +8,7 @@ $title = "Wisdom Nuggets! Have Fun and Win Crypto Programming Your Brain";
 $description = "Reality is the result of our actions initiated by our thoughts. Have fun playing a game to help you memorize key principles, maxims, logical fallacies, and more for clear thinking and success. To improve the world, start with yourself.";
 $image = "https://wisdomnuggets.lukestokes.info/images/owl-4783407_640.png";
 $url = "https://wisdomnuggets.lukestokes.info/";
-$onboarding_pitch = '<a href="https://fioprotocol.io/free-fio-addresses/" target="_blank">get yourself a FIO Address</a> and import your private key into <a href="https://greymass.com/anchor/" target="_blank">Anchor Wallet by Greymass</a> to login.';
+$onboarding_pitch = '<a href="https://fioprotocol.io/free-fio-addresses/" target="_blank">get yourself a FIO Address</a> and import your private key into <a href="https://greymass.com/anchor/" target="_blank">Anchor Wallet by Greymass</a> to login. <a href="https://peakd.com/game/@lukestokes/wisdom-nuggets-a-fio-token-faucet-game-over-usd1-000-in-the-pot" target="_blank">Learn more here</a>.';
 
 // Begin the PHP session so we have a place to store the username
 session_start();

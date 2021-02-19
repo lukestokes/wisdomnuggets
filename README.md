@@ -10,6 +10,7 @@ Why not also earn some cryptocurrency in the process? I've set up this little ga
 
 This is my own personal project using my own time and funds. If you want to donate to it's development, you can send to luke@stokes and if you want to contribute FIO tokens to the faucet, you can send those to faucet@stokes.
 
+You can learn more here: https://peakd.com/game/@lukestokes/wisdom-nuggets-a-fio-token-faucet-game-over-usd1-000-in-the-pot
 
 ### Ideas for improvement:
 

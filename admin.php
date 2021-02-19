@@ -8,7 +8,7 @@ if (php_sapi_name() != "cli") {
     die("Access Denied");
 }
 
-$clio_path = "/root/fio.ready/ubuntu_18/";
+$clio_path = "/home/fio/ubuntu_18/";
 //$clio_path = "/Users/lukestokes/Documents/workspace/FIO/chain_files/fio.ready-master/";
 $clio = "clio --url https://fio.greymass.com ";
 

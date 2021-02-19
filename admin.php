@@ -127,7 +127,7 @@ function makePayment($Faucet, $selected) {
             $parts = preg_split('/\s+/', $str);
             if (isset($parts[2]) && $parts[2] == "Locked") {
                 print "Please unlock your wallet:" . br();
-                print $clio_path . $clio . "wallet unlock" . br();
+                print "./wallet.sh" . br();
                 die();
             } else {
                 print "=================== ERROR ===================" . br();

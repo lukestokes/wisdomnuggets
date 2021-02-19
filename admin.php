@@ -71,9 +71,31 @@ function showPending($Faucet) {
     return $oldest;
 }
 
-function selectPayment($Faucet, $oldest) {
-    print "Which Payment Would you like to Process? (enter for oldest): ";
+function rejectAllPending($Faucet, $time) {
+    $time = $time - 10000;
+    print "Rejecting all pending payments with the following note (press enter to skip): ";
     $input = rtrim(fgets(STDIN));
+    if ($input != "") {
+        $FaucetPayments = $Faucet->getPayments(["status","=","Pending"]);
+        foreach ($FaucetPayments as $key => $FaucetPayment) {
+            if ($FaucetPayment->time < $time) {
+                $FaucetPayment->status = "Rejected";
+                $FaucetPayment->note = $input;
+                $FaucetPayment->save();
+                print $FaucetPayment->_id . ": ";
+                $FaucetPayment->print();
+            }
+        }
+    }
+}
+
+function selectPayment($Faucet, $oldest) {
+    print "Which Payment Would you like to Process? (enter for oldest, type 'cancel' to cancel all): ";
+    $input = rtrim(fgets(STDIN));
+    if ($input == "cancel") {
+        rejectAllPending($Faucet, time());
+        return;
+    }
     $fetch_id = $oldest;
     if (is_numeric($input)) {
         $fetch_id = $input;
@@ -107,6 +129,9 @@ function makePayment($Faucet, $selected) {
     global $clio;
     print br();
     $FaucetPayment = selectPayment($Faucet, $selected);
+    if (is_null($FaucetPayment)) {
+        return;
+    }
     $user = new User("");
     $user->_id = $FaucetPayment->user_id;
     $user->read();

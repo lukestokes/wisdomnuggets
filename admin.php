@@ -22,6 +22,9 @@ if (isset($argv[1])) {
     if ($argv[1] == "payments") {
         $show = "payments";
     }
+    if ($argv[1] == "rejected") {
+        $show = "rejected";
+    }
 }
 $id = null;
 if (isset($argv[2])) {
@@ -55,6 +58,16 @@ function showAll($Faucet) {
         $FaucetPayment->print();
     }
 }
+
+function showRejected($Faucet) {
+    print "Rejected Payments:" . br();
+    $FaucetPayments = $Faucet->getPayments(["status","=","Rejected"]);
+    foreach ($FaucetPayments as $key => $FaucetPayment) {
+        print $FaucetPayment->_id . ": ";
+        $FaucetPayment->print();
+    }
+}
+
 
 function showPending($Faucet) {
     print "Pending Payments:" . br();
@@ -201,6 +214,9 @@ if (is_null($show)) {
     }
     if ($show == "payments") {
         showAll($Faucet);
+    }
+    if ($show == "rejected") {
+        showRejected($Faucet);
     }
 }
 

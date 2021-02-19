@@ -183,7 +183,13 @@ if (!isset($_SESSION['username'])) {
   $login_status_string .= '[<a href="?login">log in</a>]';
 }
 
-$Nugget = $Wisdom->getRandom($type, $category);
+$Nugget = null;
+if (isset($_GET["type"]) && $_GET["type"] != "" && isset($_GET["nugget_id"]) && $_GET["nugget_id"] != "") {
+    $Nugget = $Wisdom->getEntry($_GET["type"], $_GET["nugget_id"]);
+}
+if (is_null($Nugget)) {
+    $Nugget = $Wisdom->getRandom($type, $category);
+}
 $display = (($Nugget->title == "") ? $Nugget->category : $Nugget->category . ": " . $Nugget->title);
 $grouped_words = $Nugget->createWordGroup();
 

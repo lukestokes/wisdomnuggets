@@ -225,6 +225,7 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script>
     var auto_play = <?php print $auto_play; ?>;
+    var share_url = "https://wisdomnuggets.lukestokes.info/?type=<?php print $Nugget->type; ?>&nugget_id=<?php print $Nugget->id; ?>";
     var completed = false;
     <?php if (isset($_GET{'login'})) { ?>
       $(function() {
@@ -239,7 +240,7 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
     </script>
     <script src="https://unpkg.com/anchor-link@3"></script>
     <script src="https://unpkg.com/anchor-link-browser-transport@3"></script>
-    <script src="js/wisdom_nuggets.js?v=3"></script>
+    <script src="js/wisdom_nuggets.js?v=4"></script>
     <script>
     // app identifier, should be set to the eosio contract account if applicable
     const identifier = 'wisdomnuggets'

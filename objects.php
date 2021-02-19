@@ -410,12 +410,14 @@ class User {
 }
 
 class Nugget {
+    public $id;
     public $type;
     public $category;
     public $description;
     public $title;
 
-    function __construct($type, $category, $description, $title = "") {
+    function __construct($id, $type, $category, $description, $title = "") {
+        $this->id = $id;
         $this->type = $type;
         $this->category = $category;
         $this->description = $description;
@@ -466,7 +468,7 @@ class Chunk {
     }
 
     function addNugget($category, $description, $title = "") {
-        $this->nuggets[] = new Nugget($this->type, $category, $description, $title);
+        $this->nuggets[] = new Nugget(count($this->nuggets), $this->type, $category, $description, $title);
     }
 }
 
@@ -586,10 +588,20 @@ class Wisdom {
         }
     }
 
+    function getEntry($entry_type, $entry_id) {
+        $chunk = $this->getChunk($entry_type);
+        foreach ($chunk->nuggets as $nugget) {
+            if ($nugget->id == $entry_id) {
+                return $nugget;
+            }
+        }
+        return null;
+    }
+
     function getRandom($entry_type = "", $entry_category = "") {
         $all_entries = $this->getEntries($entry_type, $entry_category);
         if (count($all_entries) == 0) {
-            return new Nugget("empty","nothing","You've chosen nothing, and you shall have it.");
+            return new Nugget(-1, "empty","nothing","You've chosen nothing, and you shall have it.");
         }
         $key = array_rand($all_entries);
         return $all_entries[$key];

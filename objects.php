@@ -1,5 +1,7 @@
 <?php
 
+date_default_timezone_set('America/Puerto_Rico');
+
 function br() { return (PHP_SAPI === 'cli' ? "\n" : "<br />"); }
 
 class FaucetPayment {

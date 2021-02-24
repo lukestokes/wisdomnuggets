@@ -94,7 +94,7 @@ function showPending($Faucet) {
 }
 
 function rejectAllPending($Faucet, $time) {
-    $time = $time - 10000;
+    $time = $time - 60;
     print "Rejecting all pending payments with the following note (press enter to skip): ";
     $input = rtrim(fgets(STDIN));
     if ($input != "") {
@@ -112,7 +112,7 @@ function rejectAllPending($Faucet, $time) {
 }
 
 function payAllPending($Faucet, $time) {
-    $time = $time - 10000;
+    $time = $time - 60;
     print "Are you sure you want to pay all pending payments (y/n)? ";
     $input = rtrim(fgets(STDIN));
     if ($input == "y") {

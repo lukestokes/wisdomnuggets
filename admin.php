@@ -35,6 +35,7 @@ if (isset($argv[2])) {
 
 
 function printUsers($id = null) {
+    global $Faucet;
     $users = array();
     $User = new User("");
     if ($id) {
@@ -45,8 +46,20 @@ function printUsers($id = null) {
         $users = $User->getUsers();
     }
     foreach ($users as $user) {
+        // temporary
+        $total_rewards = 0;
+        $payments = $Faucet->getPayments([["actor","=",$user->actor],["status","=","Paid"]]);
+        foreach ($payments as $payment) {
+            $total_rewards += $payment->amount;
+        }
+        $user->total_rewards = $total_rewards;
+        $user->save();
+        // end temporary
+
         $user->print();
-        $user->showSessions();
+        if ($id) {
+            $user->showSessions();
+        }
     }
 }
 
@@ -179,6 +192,9 @@ function makePayment($Faucet, $selected) {
                 $FaucetPayment->status = "Paid";
                 $FaucetPayment->save();
                 print "Success! https://fio.bloks.io/transaction/" . $parts[2] . br();
+
+                $user->total_rewards += $FaucetPayment->amount;
+                $user->save();
 
                 $stats = $Faucet->dataStore->findById(1);
                 $stats["total_distributed"] += $FaucetPayment->amount;

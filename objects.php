@@ -235,6 +235,7 @@ class User {
     public $sessions = array();
     public $fio_addresses = array();
     public $types = array();
+    public $total_rewards = 0;
 
     // exclude from object properties
     public $dataDir;
@@ -247,7 +248,7 @@ class User {
     }
 
     function print() {
-        print $this->_id . ": " . $this->actor . " " . $this->fio_address . br();
+        print $this->_id . ": " . $this->actor . " " . $this->fio_address . " (" . $this->total_rewards . " FIO)" . br();
     }
 
     function saveSession($session_start_time, $completed, $auto_play, $types) {

@@ -162,6 +162,7 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
             $user = new User($_SESSION['username']);
             $user->read();
             $user->showSessions();
+            print "<h4>Total Rewards: " . $user->total_rewards . " FIO</h4>";
             print "</p>";
           }
           print "<h3>Your Recent Faucet Rewards</h3>";

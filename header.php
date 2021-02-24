@@ -85,21 +85,32 @@ if (isset($_SESSION["previous_answers"]) && isset($_GET["previous_answers"])) {
   if ($_SESSION["previous_answers"] == $_GET["previous_answers"] && $_GET["previous_answers"] != "") {
     $_SESSION["completed"]++;
     $Faucet = new Faucet($client);
-    $result = $Faucet->isWinner($_SESSION["completed"]);
     if (isset($_SESSION['username']) && $_SESSION['fio_address'] != "") {
         $user = new User($_SESSION['username']);
         $user_exists = $user->read();
         if ($user_exists) {
+            $result = $Faucet->isWinner($_SESSION["completed"], $user);
             if ($result["winner"]) {
-                $FaucetPayment = $Faucet->distribute($user->_id, $user->actor, $user->fio_address, $user->fio_public_key);
-                $login_status_string .= '<div class="alert alert-success" role="alert"><b>Congratulations!</b><br />You won ' . $FaucetPayment->amount . ' FIO (pending approval). Needed >' . $result["threshold"] . ', rolled a ' . $result["pick"] . '.</div>';
-                $user->saveSession($_SESSION["session_start"],$_SESSION["completed"],$_SESSION['auto_play'],$_SESSION["types"]);
-                $_SESSION["completed"] = 0;
+                $payments = $Faucet->getPayments([["actor","=",$user->actor],["status","=","Pending"]]);
+                $total_pending = 0;
+                foreach ($payments as $payment) {
+                    $total_pending += $payment->amount;
+                }
+                $max_pending_to_allow = 40;
+                if ($total_pending > $max_pending_to_allow) {
+                    $login_status_string .= '<div class="alert alert-success" role="alert">You have over ' . $max_pending_to_allow . ' FIO in pending rewards. Let\'s save some rewards for others to enjoy today, okay? Wisdom is its own reward anyway, right? Needed >' . $result["threshold"] . ', rolled a ' . $result["pick"] . '.</div>';
+                } else {
+                    $FaucetPayment = $Faucet->distribute($user);
+                    $login_status_string .= '<div class="alert alert-success" role="alert"><b>Congratulations!</b><br />You won ' . $FaucetPayment->amount . ' FIO (pending approval). Needed >' . $result["threshold"] . ', rolled a ' . $result["pick"] . '.</div>';
+                    $user->saveSession($_SESSION["session_start"],$_SESSION["completed"],$_SESSION['auto_play'],$_SESSION["types"]);
+                    $_SESSION["completed"] = 0;
+                }
             } else {
                 $login_status_string .= '<div class="alert alert-info" role="alert">No FIO reward this time. Your random roll was ' . $result["pick"] . ', but you needed a number higher than ' . $result["threshold"] . '.</div>';
             }
         }
     } else {
+        $result = $Faucet->isWinner($_SESSION["completed"]);
         if ($result["winner"]) {
             $login_status_string .= '<div class="alert alert-info" role="alert"><b>You Would Have Won!</b><br />You would have won ' . $Faucet->getRewardAmount() . ' <a href="https://www.coingecko.com/en/coins/fio-protocol" target="_blank">FIO Tokens</a> if you were logged in with your own FIO Address. To start winning, ' . $onboarding_pitch . ' Needed >' . $result["threshold"] . ', rolled a ' . $result["pick"] . '.</div>';
         } else {

@@ -104,14 +104,19 @@ class Faucet {
             $result = json_decode($response->getBody());
             $fee = $result->fee;
         } catch(\Exception $e) { }
-        return $fee;
+        return $fee + 10000000; // add extra in case something changes between now and when it is executed.
     }
 
-    function isWinner($completed) {
-        // pick a number between 1 and 1000
-        $pick = random_int(1, 1000);
+    function isWinner($completed, $user = null) {
+        $upper_limit = 1000;
         $threshold = 900; // 1 out of 10 by default
-        $threshold -= ($completed * random_int(1,5));
+        if ($user) {
+            $adjustment = floor($user->total_rewards / 10) * 100;
+            $upper_limit += $adjustment;
+            $threshold += $adjustment;
+        }
+        $threshold -= $completed;
+        $pick = random_int(1, $upper_limit);
         $winner = ($pick > $threshold);
         $result = array(
             "winner" => $winner,
@@ -121,21 +126,23 @@ class Faucet {
         return $result;
     }
 
-    function getRewardAmount() {
-        $amount = random_int($this->min_to_give * 100,$this->max_to_give * 100);
-        if ($amount == 666) { // people are superstitious
-            $amount = random_int($this->min_to_give * 100,$this->max_to_give * 100);
+    function getRewardAmount($user) {
+        $max_to_give = $this->max_to_give;
+        // if you've won a lot already, you can win more, though it is harder to win.
+        if (($user->total_rewards / 100) > 1) {
+            $max_to_give += 5;
         }
+        $amount = random_int($this->min_to_give * 100,$max_to_give * 100);
         $amount /= 100;
         return $amount;
     }
 
-    function distribute($user_id, $actor, $fio_address, $fio_public_key) {
-        $amount = $this->getRewardAmount();
+    function distribute($user) {
+        $amount = $this->getRewardAmount($user);
         $amount_in_SUF = $amount * 1000000000;
         $fee = $this->getTransferFee();
         $data = '{
-          "payee_public_key": "' . $fio_public_key . '",
+          "payee_public_key": "' . $user->fio_public_key . '",
           "amount": "' . $amount_in_SUF . '",
           "max_fee": ' . $fee . ',
           "tpid": "' . $this->fio_address . '",
@@ -143,12 +150,12 @@ class Faucet {
         }';
         $cmd = "push action fio.token trnsfiopubky '" . $data . "' -p " . $this->actor . "@active";
         $FaucetPayment = new FaucetPayment();
-        $FaucetPayment->user_id = $user_id;
-        $FaucetPayment->actor = $actor;
+        $FaucetPayment->user_id = $user->_id;
+        $FaucetPayment->actor = $user->actor;
         $FaucetPayment->time = time();
-        $FaucetPayment->fio_address = $fio_address;
+        $FaucetPayment->fio_address = $user->fio_address;
         $FaucetPayment->amount = $amount;
-        $FaucetPayment->payee_public_key = $fio_public_key;
+        $FaucetPayment->payee_public_key = $user->fio_public_key;
         $FaucetPayment->cmd = $cmd;
         $FaucetPayment->status = "Pending";
         $FaucetPayment->save();

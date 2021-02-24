@@ -4,6 +4,12 @@ $client = new GuzzleHttp\Client(['base_uri' => 'http://fio.greymass.com']);
 include "objects.php";
 $Faucet = new Faucet($client);
 
+/*
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+*/
+
 if (php_sapi_name() != "cli") {
     die("Access Denied");
 }
@@ -105,11 +111,31 @@ function rejectAllPending($Faucet, $time) {
     }
 }
 
+function payAllPending($Faucet, $time) {
+    $time = $time - 10000;
+    print "Are you sure you want to pay all pending payments (y/n)? ";
+    $input = rtrim(fgets(STDIN));
+    if ($input == "y") {
+        $FaucetPayments = $Faucet->getPayments(["status","=","Pending"]);
+        foreach ($FaucetPayments as $key => $FaucetPayment) {
+            if ($FaucetPayment->time < $time) {
+                makePayment($Faucet, $FaucetPayment, false);
+            }
+        }
+    }
+}
+
+
 function selectPayment($Faucet, $oldest) {
-    print "Which Payment Would you like to Process? (enter for oldest, type 'cancel' to cancel all): ";
+    print "Which Payment Would you like to Process?\n";
+    print " Type enter for oldest\n Type 'cancel' to cancel all\n Type 'approve' to pay all): ";
     $input = rtrim(fgets(STDIN));
     if ($input == "cancel") {
         rejectAllPending($Faucet, time());
+        return;
+    }
+    if ($input == "approve") {
+        payAllPending($Faucet, time());
         return;
     }
     $fetch_id = $oldest;
@@ -140,27 +166,32 @@ function my_exec($cmd, $input='') {
               );
 }
 
-function makePayment($Faucet, $selected) {
+function makePayment($Faucet, $FaucetPayment, $prompt = true) {
     global $clio_path;
     global $clio;
     print br();
-    $FaucetPayment = selectPayment($Faucet, $selected);
     if (is_null($FaucetPayment)) {
         return;
     }
     $user = new User("");
     $user->_id = $FaucetPayment->user_id;
     $user->read();
-    print br();
-    print "--------------" . br();
-    $user->print();
-    $user->showSessions();
-    print br();
+    if ($prompt) {
+        print br();
+        print "--------------" . br();
+        $user->print();
+        $user->showSessions();
+        print br();
+    }
     $FaucetPayment->print();
     $cmd = $FaucetPayment->cmd;
     print $clio_path . $clio . $cmd . br();
-    print "Process payment (y/n)? ";
-    $input = rtrim(fgets(STDIN));
+    if ($prompt) {
+        print "Process payment (y/n)? ";
+        $input = rtrim(fgets(STDIN));
+    } else {
+        $input = "y";
+    }
     if ($input == "y") {
         $results = my_exec($clio_path . $clio . $cmd);
         if ($results["return"] == 1) {
@@ -211,7 +242,8 @@ function makePayment($Faucet, $selected) {
 if (is_null($show)) {
     $selected = showPending($Faucet);
     while($selected != -1) {
-        makePayment($Faucet, $selected);
+        $FaucetPayment = selectPayment($Faucet, $selected);
+        makePayment($Faucet, $FaucetPayment);
         $selected = showPending($Faucet);
     }
 } else {

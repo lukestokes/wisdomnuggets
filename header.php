@@ -81,6 +81,19 @@ if (!isset($_SESSION["completed"])) {
 
 $login_status_string = "";
 
+if (isset($_GET["show_pending"])) {
+    $login_status_string .= '<div class="alert alert-info" role="alert">Pending Payments: <br />';
+    $FaucetPayments = $Faucet->getPayments(["status","=","Pending"]);
+    ob_start();
+    foreach ($FaucetPayments as $key => $FaucetPayment) {
+        print $FaucetPayment->_id . ": ";
+        $FaucetPayment->print();
+    }
+    $pending = ob_get_contents();
+    ob_end_clean();
+    $login_status_string .= $pending . '</div>';
+}
+
 if (isset($_SESSION["previous_answers"]) && isset($_GET["previous_answers"])) {
   if ($_SESSION["previous_answers"] == $_GET["previous_answers"] && $_GET["previous_answers"] != "") {
     $_SESSION["completed"]++;

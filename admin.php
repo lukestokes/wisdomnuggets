@@ -46,16 +46,6 @@ function printUsers($id = null) {
         $users = $User->getUsers();
     }
     foreach ($users as $user) {
-        // temporary
-        $total_rewards = 0;
-        $payments = $Faucet->getPayments([["actor","=",$user->actor],["status","=","Paid"]]);
-        foreach ($payments as $payment) {
-            $total_rewards += $payment->amount;
-        }
-        $user->total_rewards = $total_rewards;
-        $user->save();
-        // end temporary
-
         $user->print();
         if ($id) {
             $user->showSessions();

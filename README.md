@@ -14,8 +14,6 @@ You can learn more here: https://peakd.com/game/@lukestokes/wisdom-nuggets-a-fio
 
 ### Ideas for improvement:
 
-* Create a way to link directly to a wisdom quote.
-* When tweeting out a favorite quote, include a link to the specific quote.
 * Add instructions for anyone to include pull requests for any chunk of wisdom nuggets they want to memorize.
 * Keep track of correct answers (browser storage only or add a server-side database?)
 * Let the user tag nuggets which are hard to remember which increases the frequency they are shown
@@ -23,6 +21,11 @@ You can learn more here: https://peakd.com/game/@lukestokes/wisdom-nuggets-a-fio
 * Consider a "hard" mode which doesn't use the color pattern hints
 * Allow users to star items as their favorites, aggregate the data and show number of favorites.
 
+* DONE: In the admin: show count of users
+* DONE: In the admin: show time per session
+* DONE: user print: show time per session and total time spent
+* DONE: When tweeting out a favorite quote, include a link to the specific quote.
+* DONE: Create a way to link directly to a wisdom quote.
 * DONE: Split phrases accoring to the size of the phrase. Right now, it just a random selection each time of 3 to 5 words in each group. Small phrases should allow for single word groupings. Large phrases should have larger word groups. Might also want to split things up differently so that last group can't come out smaller.
 * DONE: Track answers over time (gamify daily activity)
 * DONE: Move user storage stuff from flat files to a database or something like https://sleekdb.github.io/

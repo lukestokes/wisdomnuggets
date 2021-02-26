@@ -42,6 +42,9 @@ if (isset($argv[2])) {
 
 function printUsers($id = null) {
     global $Faucet;
+    $user_count = 0;
+    $total_time_spent_in_minutes = 0;
+    $total_rewards = 0;
     $users = array();
     $User = new User("");
     if ($id) {
@@ -52,11 +55,17 @@ function printUsers($id = null) {
         $users = $User->getUsers();
     }
     foreach ($users as $user) {
+        $user_count++;
+        $total_time_spent_in_minutes += $user->getTimeSpentInMinutes();
+        $total_rewards += $user->total_rewards;
         $user->print();
         if ($id) {
             $user->showSessions();
         }
     }
+    print "\nUsers: " . $user_count . "\n";
+    print "Total time spent: " . number_format($total_time_spent_in_minutes/60,2) . " hours.\n";
+    print "Total rewards: " . $total_rewards . " FIO.\n";
 }
 
 function showAll($Faucet) {

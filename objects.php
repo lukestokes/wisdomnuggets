@@ -106,7 +106,7 @@ class Faucet {
             $result = json_decode($response->getBody());
             $fee = $result->fee;
         } catch(\Exception $e) { }
-        return $fee + 10000000; // add extra in case something changes between now and when it is executed.
+        return $fee + 100000000; // add extra in case something changes between now and when it is executed.
     }
 
     function isWinner($completed, $user = null) {
@@ -225,11 +225,24 @@ class Session {
         $this->completed = $completed;
     }
 
+    function getTimeInMinutes() {
+        $time_in_seconds = ($this->session_end_time - $this->session_start_time);
+        $time_in_minutes = $time_in_seconds / 60;
+        return $time_in_minutes;
+    }
+
     function print($last_login) {
-        if ($last_login != $this->login_time) {            
-            print "<b>" . $this->fio_address . " " . date("Y-m-d H:i:s",$this->login_time) . " from " . $this->login_ip . "</b>" . br();
+        if ($last_login != $this->login_time) {
+            if (PHP_SAPI !== 'cli') {
+                print "<b>";
+            }
+            print $this->fio_address . " " . date("Y-m-d H:i:s",$this->login_time) . " from " . $this->login_ip;
+            if (PHP_SAPI !== 'cli') {
+                print "</b>";
+            }
+            print br();
         }
-        print date("Y-m-d H:i:s",$this->session_start_time) . " to " . date("Y-m-d H:i:s",$this->session_end_time) . ": Completed " . $this->completed . br();
+        print date("Y-m-d H:i:s",$this->session_start_time) . " to " . date("Y-m-d H:i:s",$this->session_end_time) . " (" . number_format($this->getTimeInMinutes(),2) . "m) : Completed " . $this->completed . br();
     }
 }
 
@@ -257,7 +270,7 @@ class User {
     }
 
     function print() {
-        print $this->_id . ": " . $this->actor . " " . $this->fio_address . " (" . $this->total_rewards . " FIO)" . br();
+        print $this->_id . ": " . $this->actor . " " . $this->fio_address . " (" . $this->total_rewards . " FIO over " . number_format($this->getTimeSpentInMinutes(),2) . " minutes)" . br();
     }
 
     function saveSession($session_start_time, $completed, $auto_play, $types) {
@@ -280,6 +293,15 @@ class User {
             $last_login = $Session->login_time;
         }
     }
+
+    function getTimeSpentInMinutes() {
+        $time_in_minutes = 0;
+        foreach ($this->sessions as $key => $Session) {
+            $time_in_minutes += $Session->getTimeInMinutes();
+        }
+        return $time_in_minutes;
+    }
+
     function loadData($data) {
         foreach (get_object_vars($this) as $key => $value) {
             if ($key == "sessions") {

@@ -14,6 +14,8 @@ if (php_sapi_name() != "cli") {
     die("Access Denied");
 }
 
+$override_fee = 0;
+
 $clio_path = "/home/fio/ubuntu_18/";
 //$clio_path = "/Users/lukestokes/Documents/workspace/FIO/chain_files/fio.ready-master/";
 $clio = "clio --url https://fio.greymass.com ";
@@ -30,6 +32,9 @@ if (isset($argv[1])) {
     }
     if ($argv[1] == "rejected") {
         $show = "rejected";
+    }
+    if ($argv[1] == "fees") {
+        $override_fee = 1000000000;
     }
 }
 $id = null;
@@ -178,6 +183,7 @@ function my_exec($cmd, $input='') {
 function makePayment($Faucet, $FaucetPayment, $prompt = true) {
     global $clio_path;
     global $clio;
+    global $override_fee;
     print br();
     if (is_null($FaucetPayment)) {
         return;
@@ -194,6 +200,9 @@ function makePayment($Faucet, $FaucetPayment, $prompt = true) {
     }
     $FaucetPayment->print();
     $cmd = $FaucetPayment->cmd;
+    if ($override_fee) {
+        $cmd = preg_replace('/"max_fee": ([0-9])*/','"max_fee": 10000000000',$cmd);
+    }
     print $clio_path . $clio . $cmd . br();
     if ($prompt) {
         print "Process payment (y/n)? ";

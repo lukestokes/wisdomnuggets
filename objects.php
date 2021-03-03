@@ -128,11 +128,13 @@ class Faucet {
         return $result;
     }
 
-    function getRewardAmount($user) {
+    function getRewardAmount($user = null) {
         $max_to_give = $this->max_to_give;
-        // if you've won a lot already, you can win more, though it is harder to win.
-        if (($user->total_rewards / 100) > 1) {
-            $max_to_give += 5;
+        if (!is_null($user)) {
+            // if you've won a lot already, you can win more, though it is harder to win.
+            if (($user->total_rewards / 100) > 1) {
+                $max_to_give += 5;
+            }
         }
         $amount = random_int($this->min_to_give * 100,$max_to_give * 100);
         $amount /= 100;

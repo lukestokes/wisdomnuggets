@@ -93,6 +93,7 @@ function showRejected($Faucet) {
 
 
 function showPending($Faucet) {
+    $total_pending = 0;
     print "Pending Payments:" . br();
     $FaucetPayments = $Faucet->getPayments(["status","=","Pending"]);
     $oldest = -1;
@@ -101,9 +102,11 @@ function showPending($Faucet) {
             $oldest = $FaucetPayment->_id;
         }
         $oldest = min($oldest,$FaucetPayment->_id);
+        $total_pending += $FaucetPayment->amount;
         print $FaucetPayment->_id . ": ";
         $FaucetPayment->print();
     }
+    print br() . "Total Pending: " . $total_pending . " FIO" . br() . br();
     return $oldest;
 }
 

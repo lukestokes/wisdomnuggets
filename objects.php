@@ -110,8 +110,8 @@ class Faucet {
     }
 
     function isWinner($completed, $user = null) {
-        $upper_limit = 1000;
-        $threshold = 900; // 1 out of 10 by default
+        $upper_limit = 2000;
+        $threshold = 1900; // 1 out of 20 by default
         if ($user) {
             $adjustment = floor($user->total_rewards / 10) * 100;
             $upper_limit += $adjustment;

@@ -173,7 +173,7 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
 
         }
         print "<h3>Recent Faucet Rewards</h3>";
-        $all_payments = $Faucet->getPayments(["status","=","Paid"], 20);
+        $all_payments = $Faucet->getPayments(["status","=","Paid"], 40);
         print "<p>";
         $Faucet->printPayments($all_payments);
         print "</p>";

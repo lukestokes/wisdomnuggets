@@ -66,6 +66,18 @@ function printUsers($id = null) {
         $user->print();
         if ($id) {
             $user->showSessions();
+        } else {
+            $ips = array();
+            foreach ($user->sessions as $key => $Session) {
+                if (!in_array($Session->login_ip, $ips)) {
+                    $ips[] = $Session->login_ip;
+                }
+            }
+            print "     ";
+            foreach ($ips as $ip) {
+                print $ip . " ";
+            }
+            print "\n";
         }
     }
     print "\nUsers: " . $user_count . "\n";

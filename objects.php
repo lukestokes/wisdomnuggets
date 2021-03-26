@@ -75,8 +75,8 @@ class FaucetPayment {
 }
 
 class Faucet {
-    public $max_to_give = 10;
-    public $min_to_give = 1;
+    public $max_to_give = 5;
+    public $min_to_give = 0.5;
     public $client;
     public $fio_address = "faucet@stokes";
     public $actor = "vuuchahodjvm";
@@ -131,9 +131,8 @@ class Faucet {
     function getRewardAmount($user = null) {
         $max_to_give = $this->max_to_give;
         if (!is_null($user)) {
-            // if you've won a lot already, you can win more, though it is harder to win.
             if (($user->total_rewards / 100) > 1) {
-                $max_to_give += 5;
+                $max_to_give -= ($max_to_give * 0.20); // if you win a lot, lower how much you can win by 20%
             }
         }
         $amount = random_int($this->min_to_give * 100,$max_to_give * 100);

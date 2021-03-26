@@ -109,7 +109,7 @@ if (isset($_SESSION["previous_answers"]) && isset($_GET["previous_answers"])) {
                 foreach ($payments as $payment) {
                     $total_pending += $payment->amount;
                 }
-                $max_pending_to_allow = 12;
+                $max_pending_to_allow = 10;
                 if ($total_pending > $max_pending_to_allow) {
                     $login_status_string .= '<div class="alert alert-success" role="alert">You have over ' . $max_pending_to_allow . ' FIO in pending rewards. Let\'s save some rewards for others to enjoy today, okay? Wisdom is its own reward anyway, right? Needed >' . $result["threshold"] . ', rolled a ' . $result["pick"] . '.</div>';
                 } else {

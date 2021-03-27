@@ -88,7 +88,7 @@ $MaxMarmer->addNugget($category, "The job of our species, planet, maybe even uni
 $MaxMarmer->addNugget($category, "Humanity appears to be at the forefront of the universe's development but we will soon pass the baton as we more fully merge with our technology and become a new enhanced species.","Problem Solving Perspectives:");
 $MaxMarmer->addNugget($category, "Everything will become an information science. Progress often becomes exponential once sciences become information sciences.","Problem Solving Perspectives:");
 $MaxMarmer->addNugget($category, "Anything that gained widespread cultural adoption probably has some truth it.","Problem Solving Perspectives:");
-$MaxMarmer->addNugget($category, "The universe contains both form and the formless. Bhuddism got only half of the equation right. It evolved in a time where the pace of change was to slow to perceive the inexorable march forward of the world of form.","Problem Solving Perspectives:");
+$MaxMarmer->addNugget($category, "The universe contains both form and the formless. Bhuddism got only half of the equation right. It evolved in a time where the pace of change was too slow to perceive the inexorable march forward of the world of form.","Problem Solving Perspectives:");
 $MaxMarmer->addNugget($category, "Reality is not something to escape. It is our evolutionary duty to participate in the unfolding of the world of form.","Problem Solving Perspectives:");
 $MaxMarmer->addNugget($category, "Greater truth is found through increasing coherence and increasing correspondence.","Problem Solving Perspectives:");
 $MaxMarmer->addNugget($category, "Developmental systems have a direction. The universe is a developmental system.","Problem Solving Perspectives:");

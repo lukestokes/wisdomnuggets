@@ -44,7 +44,7 @@ function showAnswer(as_correct) {
               timeleft -= .5;
             }, 500);
             setTimeout(function() {
-                jQuery("#main_form").submit();
+                jQuery("#main_form_submit").click();
             }, auto_play * 1000);
         }
     }
@@ -292,7 +292,7 @@ function login() {
       jQuery("#identity_proof").val(JSON.stringify(identity.proof));
       session = identity.session;
       didLogin();
-      jQuery("#main_form").submit();
+      jQuery("#main_form_submit").click();
     });
 }
 

@@ -104,19 +104,28 @@ if (isset($_SESSION["previous_answers"]) && isset($_GET["previous_answers"])) {
         if ($user_exists) {
             $result = $Faucet->isWinner($_SESSION["completed"], $user);
             if ($result["winner"]) {
-                $payments = $Faucet->getPayments([["actor","=",$user->actor],["status","=","Pending"]]);
-                $total_pending = 0;
-                foreach ($payments as $payment) {
-                    $total_pending += $payment->amount;
-                }
-                $max_pending_to_allow = 10;
-                if ($total_pending > $max_pending_to_allow) {
-                    $login_status_string .= '<div class="alert alert-success" role="alert">You have over ' . $max_pending_to_allow . ' FIO in pending rewards. Let\'s save some rewards for others to enjoy today, okay? Wisdom is its own reward anyway, right? Needed >' . $result["threshold"] . ', rolled a ' . $result["pick"] . '.</div>';
+                // check google recaptcha
+                $recaptcha_response = $client->post('https://www.google.com/recaptcha/api/siteverify', [
+                    GuzzleHttp\RequestOptions::FORM_PARAMS => ['secret' => $_ENV['GOOGLE_RECAPTCHA_SECRET'], 'response' => strip_tags($_REQUEST['g-recaptcha-response']), 'remoteip' => $_SERVER['REMOTE_ADDR']]
+                ]);
+                $recaptcha_results = json_decode($recaptcha_response->getBody(), true);
+                if (!$recaptcha_results['success']) {
+                    $login_status_string .= '<div class="alert alert-info" role="alert">Google Recaptcha Error: ' . implode(" ", $recaptcha_results['error-codes']) . '</div>';
                 } else {
-                    $FaucetPayment = $Faucet->distribute($user);
-                    $login_status_string .= '<div class="alert alert-success" role="alert"><b>Congratulations!</b><br />You won ' . $FaucetPayment->amount . ' FIO (pending approval). Needed >' . $result["threshold"] . ', rolled a ' . $result["pick"] . '.</div>';
-                    $user->saveSession($_SESSION["session_start"],$_SESSION["completed"],$_SESSION['auto_play'],$_SESSION["types"]);
-                    $_SESSION["completed"] = 0;
+                    $payments = $Faucet->getPayments([["actor","=",$user->actor],["status","=","Pending"]]);
+                    $total_pending = 0;
+                    foreach ($payments as $payment) {
+                        $total_pending += $payment->amount;
+                    }
+                    $max_pending_to_allow = 10;
+                    if ($total_pending > $max_pending_to_allow) {
+                        $login_status_string .= '<div class="alert alert-success" role="alert">You have over ' . $max_pending_to_allow . ' FIO in pending rewards. Let\'s save some rewards for others to enjoy today, okay? Wisdom is its own reward anyway, right? Needed >' . $result["threshold"] . ', rolled a ' . $result["pick"] . '.</div>';
+                    } else {
+                        $FaucetPayment = $Faucet->distribute($user);
+                        $login_status_string .= '<div class="alert alert-success" role="alert"><b>Congratulations!</b><br />You won ' . $FaucetPayment->amount . ' FIO (pending approval). Needed >' . $result["threshold"] . ', rolled a ' . $result["pick"] . '.</div>';
+                        $user->saveSession($_SESSION["session_start"],$_SESSION["completed"],$_SESSION['auto_play'],$_SESSION["types"]);
+                        $_SESSION["completed"] = 0;
+                    }
                 }
             } else {
                 $login_status_string .= '<div class="alert alert-info" role="alert">No FIO reward this time. Your random roll was ' . $result["pick"] . ', but you needed a number higher than ' . $result["threshold"] . '.</div>';

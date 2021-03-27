@@ -1,3 +1,4 @@
 composer.phar
 /vendor/
 /user_data/
+.env

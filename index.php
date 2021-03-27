@@ -1,5 +1,7 @@
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 $client = new GuzzleHttp\Client(['base_uri' => 'http://fio.greymass.com']);
 include "header.php";
 ?>
@@ -122,7 +124,12 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
               <input type="hidden" id="actor" name="actor" value="">
               <input type="hidden" id="identity_proof" name="identity_proof" value=''>
               <div class="form-group">
-                <button type="submit" class="btn btn-primary">Play Again!</button>
+                <button type="submit"
+                  id="main_form_submit"
+                  data-sitekey="<?php print $_ENV['GOOGLE_RECAPTCHA_SITE_KEY']; ?>"
+                  data-callback='onSubmit'
+                  data-action='submit'
+                 class="btn btn-primary g-recaptcha">Play Again!</button>
               </div>
               <?php if (isset($_SESSION['username'])) { ?>
               <div>
@@ -206,6 +213,12 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
           };
           return t;
         }(document, "script", "twitter-wjs"));
+
+        // recaptcha
+        function onSubmit(token) {
+         document.getElementById("main_form").submit();
+        }
+
         </script>
         <div class="row align-items-center">
           <!-- Your share button code -->
@@ -241,6 +254,7 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
     </script>
     <script src="https://unpkg.com/anchor-link@3"></script>
     <script src="https://unpkg.com/anchor-link-browser-transport@3"></script>
+    <script src="https://www.google.com/recaptcha/api.js"></script>
     <script src="js/wisdom_nuggets.js?v=4"></script>
     <script>
     // app identifier, should be set to the eosio contract account if applicable

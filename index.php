@@ -255,7 +255,7 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
     <script src="https://unpkg.com/anchor-link@3"></script>
     <script src="https://unpkg.com/anchor-link-browser-transport@3"></script>
     <script src="https://www.google.com/recaptcha/api.js"></script>
-    <script src="js/wisdom_nuggets.js?v=4"></script>
+    <script src="js/wisdom_nuggets.js?v=5"></script>
     <script>
     // app identifier, should be set to the eosio contract account if applicable
     const identifier = 'wisdomnuggets'

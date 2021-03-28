@@ -259,6 +259,7 @@ class User {
     public $fio_addresses = array();
     public $types = array();
     public $total_rewards = 0;
+    public $tweeted;
 
     // exclude from object properties
     public $dataDir;
@@ -271,7 +272,7 @@ class User {
     }
 
     function print() {
-        print $this->_id . ": " . $this->actor . " " . $this->fio_address . " (" . $this->total_rewards . " FIO over " . number_format($this->getTimeSpentInMinutes(),2) . " minutes)" . br();
+        print $this->_id . ": " . $this->actor . " " . $this->fio_address . " (" . $this->total_rewards . " FIO over " . number_format($this->getTimeSpentInMinutes(),2) . " minutes) Tweeted:" . $this->tweeted . br();
     }
 
     function saveSession($session_start_time, $completed, $auto_play, $types) {

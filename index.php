@@ -123,6 +123,7 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
               <input type="hidden" name="customized" value="true">
               <input type="hidden" id="actor" name="actor" value="">
               <input type="hidden" id="identity_proof" name="identity_proof" value=''>
+              <input type="hidden" id="tweeted" name="tweeted" value="">
               <div class="form-group">
                 <button type="submit"
                   id="main_form_submit"
@@ -213,6 +214,12 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
           };
           return t;
         }(document, "script", "twitter-wjs"));
+
+        twttr.ready(function (twttr) {
+          twttr.events.bind('tweet', function(event) {
+            jQuery("#tweeted").val("true");
+          });
+        });
 
         // recaptcha
         function onSubmit(token) {

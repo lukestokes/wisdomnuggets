@@ -94,6 +94,17 @@ if (isset($_GET["show_pending"])) {
     $login_status_string .= $pending . '</div>';
 }
 
+if (isset($_SESSION['username'])) {
+    if (isset($_GET["tweeted"]) && $_GET["tweeted"] == "true") {
+        $user = new User($_SESSION['username']);
+        $user_exists = $user->read();
+        if ($user_exists) {
+            $user->tweeted = time();
+            $user->save();
+        }
+    }
+}
+
 if (isset($_SESSION["previous_answers"]) && isset($_GET["previous_answers"])) {
   if ($_SESSION["previous_answers"] == $_GET["previous_answers"] && $_GET["previous_answers"] != "") {
     $_SESSION["completed"]++;
@@ -121,10 +132,14 @@ if (isset($_SESSION["previous_answers"]) && isset($_GET["previous_answers"])) {
                     if ($total_pending > $max_pending_to_allow) {
                         $login_status_string .= '<div class="alert alert-success" role="alert">You have over ' . $max_pending_to_allow . ' FIO in pending rewards. Let\'s save some rewards for others to enjoy today, okay? Wisdom is its own reward anyway, right? Needed >' . $result["threshold"] . ', rolled a ' . $result["pick"] . '.</div>';
                     } else {
-                        $FaucetPayment = $Faucet->distribute($user);
-                        $login_status_string .= '<div class="alert alert-success" role="alert"><b>Congratulations!</b><br />You won ' . $FaucetPayment->amount . ' FIO (pending approval). Needed >' . $result["threshold"] . ', rolled a ' . $result["pick"] . '.</div>';
-                        $user->saveSession($_SESSION["session_start"],$_SESSION["completed"],$_SESSION['auto_play'],$_SESSION["types"]);
-                        $_SESSION["completed"] = 0;
+                        if ($user->total_rewards > 10 && is_null($user->tweeted)) {
+                            $login_status_string .= '<div class="alert alert-success" role="alert">You have already won ' . $user->total_rewards . ' in FIO Rewards, but you have never tweeted about Wisdom Nuggets. If you want to keep winning, please share a wisdom nugget at least once. Needed >' . $result["threshold"] . ', rolled a ' . $result["pick"] . '.</div>';
+                        } else {
+                            $FaucetPayment = $Faucet->distribute($user);
+                            $login_status_string .= '<div class="alert alert-success" role="alert"><b>Congratulations!</b><br />You won ' . $FaucetPayment->amount . ' FIO (pending approval). Needed >' . $result["threshold"] . ', rolled a ' . $result["pick"] . '.</div>';
+                            $user->saveSession($_SESSION["session_start"],$_SESSION["completed"],$_SESSION['auto_play'],$_SESSION["types"]);
+                            $_SESSION["completed"] = 0;
+                        }
                     }
                 }
             } else {
@@ -181,6 +196,7 @@ if (isset($_GET["identity_proof"]) && $_GET["identity_proof"] != "") {
 
 // If there is a username, they are logged in, and we'll show the logged-in view
 if (isset($_SESSION['username'])) {
+
     if (isset($_GET["next_action"]) && $_GET["next_action"] == "change_fio_address") {
         $user = new User($_SESSION['username']);
         $user->read();

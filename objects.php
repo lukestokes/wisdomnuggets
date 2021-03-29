@@ -441,6 +441,30 @@ class User {
         return $form_string;
     }
 
+    function isUsingFreeAddress() {
+        $is_free = false;
+        $free_domains = [
+            'edge',
+            'coinomi',
+            'infinitowallet',
+            'guarda',
+            'shapeshift',
+            'mas',
+            'tribe',
+            'ecoins',
+            'qtum',
+            'smart',
+            'trustee',
+        ];
+        $parts = explode("@", $this->fio_address);
+        if (isset($parts[1])) {
+            if (in_array($parts[1], $free_domains)) {
+                $is_free = true;
+            }
+        }
+        return $is_free;
+    }
+
 }
 
 class Nugget {

@@ -173,7 +173,7 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
             print "</p>";
           }
           print "<h3>Your Total Rewards: " . $user->total_rewards . " FIO</h3>";
-          if ($user->total_rewards > 10) {
+          if ($user->total_rewards > 10 && $user->isUsingFreeAddress()) {
             print '<div class="alert alert-success" role="alert">Have you considered registering <a href="https://greymass.github.io/fio-register/" target="_blank">your own custom FIO Address or FIO Domain</a>?</div>';
           }
           print "<h4>Your Recent Faucet Rewards</h4>";

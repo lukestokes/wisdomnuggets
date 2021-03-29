@@ -165,27 +165,29 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
         <p>You've completed <?php print $_SESSION["completed"]; ?> this session. [<a href="?save">save stats</a>] [<a href="?viewStats">view stats</a>]</p>
         <?php
         if (isset($_SESSION['username'])) {
+          $user = new User($_SESSION['username']);
+          $user->read();
           if (isset($_GET["viewStats"])) {
             print "<p>";
-            $user = new User($_SESSION['username']);
-            $user->read();
             $user->showSessions();
-            print "<h4>Total Rewards: " . $user->total_rewards . " FIO</h4>";
             print "</p>";
           }
-          print "<h3>Your Recent Faucet Rewards</h3>";
+          print "<h3>Your Total Rewards: " . $user->total_rewards . " FIO</h3>";
+          if ($user->total_rewards > 10) {
+            print '<div class="alert alert-success" role="alert">Have you considered registering <a href="https://greymass.github.io/fio-register/" target="_blank">your own custom FIO Address or FIO Domain</a>?</div>';
+          }
+          print "<h4>Your Recent Faucet Rewards</h4>";
           $payments = $Faucet->getPayments(["actor","=",$_SESSION['username']], 10);
           print "<p>";
           $Faucet->printPayments($payments);
           print "</p>";
-
         }
-        print "<h3>Recent Faucet Rewards</h3>";
+        print "<h3>Total Rewards Distributed: " . $Faucet->totalDistributed() . " FIO</h3>";
+        print "<h4>Recent Faucet Rewards</h4>";
         $all_payments = $Faucet->getPayments(["status","=","Paid"], 40);
         print "<p>";
         $Faucet->printPayments($all_payments);
         print "</p>";
-        print "<h3>Total Rewards Distributed: " . $Faucet->totalDistributed() . " FIO</h3>";
         ?>
         <a href="https://pixabay.com/vectors/owl-reading-book-bird-study-4783407/"><img src="<?php print $image; ?>" class="img-fluid"/></a>
         <script>

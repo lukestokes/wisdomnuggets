@@ -135,7 +135,7 @@ if (isset($_SESSION["previous_answers"]) && isset($_GET["previous_answers"])) {
                         if ($user->total_rewards > 10 && is_null($user->tweeted)) {
                             $login_status_string .= '<div class="alert alert-success" role="alert">You have already won ' . $user->total_rewards . ' in FIO Rewards, but you have never tweeted about Wisdom Nuggets. If you want to keep winning, please share a wisdom nugget at least once. Needed >' . $result["threshold"] . ', rolled a ' . $result["pick"] . '.</div>';
                         } else {
-                            $FaucetPayment = $Faucet->distribute($user);
+                            $FaucetPayment = $Faucet->distribute($user, $recaptcha_results['score']);
                             $login_status_string .= '<div class="alert alert-success" role="alert"><b>Congratulations!</b><br />You won ' . $FaucetPayment->amount . ' FIO (pending approval). Needed >' . $result["threshold"] . ', rolled a ' . $result["pick"] . '.</div>';
                             $user->saveSession($_SESSION["session_start"],$_SESSION["completed"],$_SESSION['auto_play'],$_SESSION["types"]);
                             $_SESSION["completed"] = 0;

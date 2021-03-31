@@ -16,6 +16,7 @@ class FaucetPayment {
     public $amount;
     public $cmd;
     public $transaction_id;
+    public $captcha_score;
 
     public $dataDir;
     public $dataStore;
@@ -56,6 +57,7 @@ class FaucetPayment {
 
     function print() {
         print date("Y-m-d H:i:s",$this->time);
+        print " Captcha: " . $this->captcha_score;
         print ": " . $this->fio_address . " got " . $this->amount . " FIO";
         print " (";
         if ($this->status == "Paid") {
@@ -112,6 +114,12 @@ class Faucet {
     function isWinner($completed, $user = null) {
         $upper_limit = 2000;
         $threshold = 1900; // 1 out of 20 by default
+
+        /* for testing
+        $upper_limit = 200;
+        $threshold = 10;
+        */
+
         if ($user) {
             $adjustment = floor($user->total_rewards / 10) * 100;
             $upper_limit += $adjustment;
@@ -140,7 +148,7 @@ class Faucet {
         return $amount;
     }
 
-    function distribute($user) {
+    function distribute($user, $captcha_score) {
         $amount = $this->getRewardAmount($user);
         $amount_in_SUF = $amount * 1000000000;
         $fee = $this->getTransferFee();
@@ -161,6 +169,7 @@ class Faucet {
         $FaucetPayment->payee_public_key = $user->fio_public_key;
         $FaucetPayment->cmd = $cmd;
         $FaucetPayment->status = "Pending";
+        $FaucetPayment->captcha_score = $captcha_score;
         $FaucetPayment->save();
         return $FaucetPayment;
     }

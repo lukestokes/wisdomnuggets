@@ -130,18 +130,11 @@ function rejectAllPending($Faucet, $time) {
         $FaucetPayments = $Faucet->getPayments(["status","=","Pending"]);
         foreach ($FaucetPayments as $key => $FaucetPayment) {
             if ($FaucetPayment->time < $time) {
-
-
-                print $FaucetPayment->_id . ": ";
-                $FaucetPayment->print();
-
-/*
                 $FaucetPayment->status = "Rejected";
                 $FaucetPayment->note = $input;
                 $FaucetPayment->save();
                 print $FaucetPayment->_id . ": ";
                 $FaucetPayment->print();
-*/
             }
         }
     }
@@ -149,10 +142,10 @@ function rejectAllPending($Faucet, $time) {
 
 function rejectAllPendingLowCaptcha($Faucet, $time) {
     $time = $time - 60;
-    print "Rejecting all pending payments with a captcha of 0.1 and lower with the following note (press enter to skip): ";
+    print "Rejecting all pending payments with a captcha of 0.3 and lower with the following note (press enter to skip): ";
     $input = rtrim(fgets(STDIN));
     if ($input != "") {
-        $FaucetPayments = $Faucet->getPayments([["status","=","Pending"],['captcha_score',"<=",0.1]]);
+        $FaucetPayments = $Faucet->getPayments([["status","=","Pending"],['captcha_score',"<=",0.3]]);
         foreach ($FaucetPayments as $key => $FaucetPayment) {
             if ($FaucetPayment->time < $time) {
                 $FaucetPayment->status = "Rejected";

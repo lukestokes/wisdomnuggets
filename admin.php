@@ -130,6 +130,31 @@ function rejectAllPending($Faucet, $time) {
         $FaucetPayments = $Faucet->getPayments(["status","=","Pending"]);
         foreach ($FaucetPayments as $key => $FaucetPayment) {
             if ($FaucetPayment->time < $time) {
+
+
+                print $FaucetPayment->_id . ": ";
+                $FaucetPayment->print();
+
+/*
+                $FaucetPayment->status = "Rejected";
+                $FaucetPayment->note = $input;
+                $FaucetPayment->save();
+                print $FaucetPayment->_id . ": ";
+                $FaucetPayment->print();
+*/
+            }
+        }
+    }
+}
+
+function rejectAllPendingLowCaptcha($Faucet, $time) {
+    $time = $time - 60;
+    print "Rejecting all pending payments with a captcha of 0.1 and lower with the following note (press enter to skip): ";
+    $input = rtrim(fgets(STDIN));
+    if ($input != "") {
+        $FaucetPayments = $Faucet->getPayments([["status","=","Pending"],['captcha_score',"<=",0.1]]);
+        foreach ($FaucetPayments as $key => $FaucetPayment) {
+            if ($FaucetPayment->time < $time) {
                 $FaucetPayment->status = "Rejected";
                 $FaucetPayment->note = $input;
                 $FaucetPayment->save();
@@ -157,8 +182,12 @@ function payAllPending($Faucet, $time) {
 
 function selectPayment($Faucet, $oldest) {
     print "Which Payment Would you like to Process?\n";
-    print " Type enter for oldest\n Type 'cancel' to cancel all\n Type 'approve' to pay all): ";
+    print " Type enter for oldest\n Type 'cancel' to cancel all\n Type 'cancel_low_captcha' to cancel all low captcha\n Type 'approve' to pay all): ";
     $input = rtrim(fgets(STDIN));
+    if ($input == "cancel_low_captcha") {
+        rejectAllPendingLowCaptcha($Faucet, time());
+        return;
+    }
     if ($input == "cancel") {
         rejectAllPending($Faucet, time());
         return;

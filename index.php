@@ -70,6 +70,8 @@ print '.btn-' . $button_classes[$key] . ':hover, .btn-' . $button_classes[$key] 
         <h4><?php print $title; ?></h4>
         <?php } ?>
         <div>
+          <strong>Faucet distributions are currently disabled due to Sybil attack. <a href="https://peakd.com/game/@lukestokes/update-on-the-wisdom-nuggets-fio-faucet">Read here</a> for more information.</strong><br />
+
           <?php if ($_SESSION["completed"] < 2 || !isset($_SESSION['username'])) { ?>Click the grouped words in the correct order to complete the phrase. <a data-toggle="collapse" href="#whyText">Why?</a><?php } ?> <?php print $login_status_string; ?>
         </div>
         <div class="collapse" id="whyText">
